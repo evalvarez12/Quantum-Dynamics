@@ -14,11 +14,31 @@ def A1D(numberPoints, potentialFunc, domainStart, domainLength):
     """Hamiltonian discretization in 1d without boundaries"""
     h = domainLength/numberPoints
 
-    x = np.linspace(domainStart, domainStart + domainLength, numberPoints)
+    x = np.linspace(domainStart, domainStart + domainLength, numberPoints-1)
     v = potentialFunc(x)
 
     a = np.ones(numberPoints-1)*(2+(h**2 * v))
-    b = np.ones(numberPoints-1)*-1
+    b = np.ones(numberPoints-2)*-1
+    A = sp.diags(a, 0) + sp.diags(b, 1) + sp.diags(b, -1)
+    return (1/h**2) * A
+
+
+def A1Dfull(numberPoints, potentialFunc, domainStart, domainLength):
+    """Hamiltonian discretization in 1d with Dirichlet boundary conditions"""
+    h = domainLength/numberPoints
+
+    x = np.linspace(domainStart, domainStart + domainLength, numberPoints+1)
+    v = potentialFunc(x)
+
+    a = np.ones(numberPoints+1)*(2+(h**2 * v))
+    b = np.ones(numberPoints)*-1
+
+    a[0] = h**2
+    a[numberPoints] = h**2
+
+    b[0] = 0
+    b[numberPoints-1] = 0
+
     A = sp.diags(a, 0) + sp.diags(b, 1) + sp.diags(b, -1)
     return (1/h**2) * A
 
@@ -28,8 +48,8 @@ def A2D(numberPoints, potentialFunc, domainStart, domainLength):
     h = domainLength/numberPoints
 
     o = np.ones(numberPoints)
-    x = np.linspace(domainStart[0], domainStart[0] + domainLength, numberPoints)
-    y = np.linspace(domainStart[1], domainStart[1] + domainLength, numberPoints)
+    x = np.linspace(domainStart[0], domainStart[0] + domainLength, numberPoints-1)
+    y = np.linspace(domainStart[1], domainStart[1] + domainLength, numberPoints-1)
     x = np.kron(x, o)
     y = np.kron(o, y)
     v = potentialFunc(x, y)
@@ -56,9 +76,9 @@ def Th(numberPoints, potentialFunc, domainStart, domainLength):
     """Create a section of the matrix A"""
     h = 1./numberPoints
 
-    o = np.ones(numberPoints)
-    x = np.linspace(domainStart[0], domainStart[0] + domainLength, numberPoints)
-    y = np.linspace(domainStart[1], domainStart[1] + domainLength, numberPoints)
+    o = np.ones(numberPoints+1)
+    x = np.linspace(domainStart[0], domainStart[0] + domainLength, numberPoints+1)
+    y = np.linspace(domainStart[1], domainStart[1] + domainLength, numberPoints+1)
     x = np.kron(x, o)
     y = np.kron(o, y)
     v = potentialFunc(x, y)
