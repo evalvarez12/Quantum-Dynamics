@@ -1,2 +1,2 @@
-# Quntum Dynamics project by Eduardo Villaseñor and Eoin Horgan
+# Quntum Dynamics project by Eduardo VillaseÃ±or and Eoin Horgan
 
