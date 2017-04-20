@@ -5,13 +5,13 @@ created on: 19-04-2017.
 Test routines for matrix.py
 """
 import numpy as np
-import scipy.sparse.linalg as sp
+import scipy.sparse.linalg as spl
 import matrix
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 
-numberPoints = 6
+numberPoints = 10
 
 
 def infiniteWell(x):
@@ -22,7 +22,7 @@ def infiniteWell(x):
 
 
 A = matrix.A1Dfull(numberPoints, np.vectorize(infiniteWell), 0, 2)
-energies, psi = sp.eigsh(A)
+energies, psi = spl.eigsh(A)
 
 # start = time.time()
 # u = sp.spsolve(A,f,permc_spec='NATURAL')

@@ -11,8 +11,18 @@ import scipy.sparse as sp
 
 
 def A1D(numberPoints, potentialFunc, domainStart, domainLength):
-    """Hamiltonian discretization in 1d without boundaries"""
-    h = domainLength/numberPoints
+    """
+    Hamiltonian discretization in 1d without boundaries.
+    Uses Explicit method.
+    Input:
+        Number of points to evaluate on (float)
+        Potential function (vectorised function)
+        Location where domain starts (float)
+        Length of domain (float)
+    Output:
+        Matrix A (scipy sparse matrix)
+    """
+    h = domainLength/numberPoints # Δx
 
     x = np.linspace(domainStart, domainStart + domainLength, numberPoints-1)
     v = potentialFunc(x)
@@ -24,8 +34,19 @@ def A1D(numberPoints, potentialFunc, domainStart, domainLength):
 
 
 def A1Dfull(numberPoints, potentialFunc, domainStart, domainLength):
-    """Hamiltonian discretization in 1d with Dirichlet boundary conditions"""
-    h = domainLength/numberPoints
+    """
+    Hamiltonian discretization in 1d with Dirichlet boundary conditions.
+    Uses Explicit method to compute RHS of (A.68) in jos' book.
+    Here we take hbar = 2m = 1.
+    Input:
+        Number of points to evaluate on (float)
+        Potential function (vectorised function)
+        Location where domain starts (float)
+        Length of domain (float)
+    Output:
+        Matrix A, the discretised Hamiltonian (scipy sparse matrix)
+    """
+    h = domainLength/numberPoints # Δx
 
     x = np.linspace(domainStart, domainStart + domainLength, numberPoints+1)
     v = potentialFunc(x)
@@ -44,12 +65,24 @@ def A1Dfull(numberPoints, potentialFunc, domainStart, domainLength):
 
 
 def A2D(numberPoints, potentialFunc, domainStart, domainLength):
-    """Hamiltonian discretization in 2d without boundaries"""
-    h = domainLength/numberPoints
+    """
+    Hamiltonian discretization in 2d without boundaries.
+    Here we take hbar = 2m = 1.
+    Input:
+        Number of points to evaluate in each axis direction (float)
+        Potential function (vectorised function)
+        Location where domain starts (tuple)
+        Length of domain (float)
+    Output:
+        Matrix A, the discretised Hamiltonian (scipy sparse matrix)
+    """
+    h = domainLength/numberPoints # Δx
 
     o = np.ones(numberPoints)
-    x = np.linspace(domainStart[0], domainStart[0] + domainLength, numberPoints-1)
-    y = np.linspace(domainStart[1], domainStart[1] + domainLength, numberPoints-1)
+    x = np.linspace(domainStart[0], domainStart[0] + domainLength, 
+                    numberPoints-1)
+    y = np.linspace(domainStart[1], domainStart[1] + domainLength, 
+                    numberPoints-1)
     x = np.kron(x, o)
     y = np.kron(o, y)
     v = potentialFunc(x, y)
@@ -64,21 +97,27 @@ def A2D(numberPoints, potentialFunc, domainStart, domainLength):
     return (1/h**2) * A
 
 
-def Ih(numberPoints):
-    """Identity with zeros on the extreme"""
+def _Ih(numberPoints):
+    """
+    Returns Identity matrix of given length with zeros on the extremes.
+    """
     Id = np.ones(numberPoints+1)
     Id[0] = 0
     Id[numberPoints] = 0
     return sp.diags(Id)
 
 
-def Th(numberPoints, potentialFunc, domainStart, domainLength):
-    """Create a section of the matrix A"""
+def _Th(numberPoints, potentialFunc, domainStart, domainLength):
+    """
+    Create a section of the matrix A
+    """
     h = 1./numberPoints
 
     o = np.ones(numberPoints+1)
-    x = np.linspace(domainStart[0], domainStart[0] + domainLength, numberPoints+1)
-    y = np.linspace(domainStart[1], domainStart[1] + domainLength, numberPoints+1)
+    x = np.linspace(domainStart[0], domainStart[0] + domainLength,
+                    numberPoints+1)
+    y = np.linspace(domainStart[1], domainStart[1] + domainLength,
+                    numberPoints+1)
     x = np.kron(x, o)
     y = np.kron(o, y)
     v = potentialFunc(x, y)
@@ -95,7 +134,9 @@ def Th(numberPoints, potentialFunc, domainStart, domainLength):
     return T
 
 def A2Dfull(numberPoints, potentialFunc, domainStart, domainLength):
-    """Hamiltoanian discretization in 2D with dirichlet boundary conditions"""
+    """
+    Hamiltonian discretization in 2D with dirichlet boundary conditions
+    """
     h = 1./numberPoints
     a = np.ones(numberPoints+1)
     b = np.ones(numberPoints)*(-1)
@@ -112,8 +153,8 @@ def A2Dfull(numberPoints, potentialFunc, domainStart, domainLength):
     Center3 = sp.diags(b, -1)
     Bounds = sp.diags(b2, 0)
 
-    T = Th(numberPoints, potentialFunc, domainStart, domainLength)
-    Id = Ih(numberPoints)
+    T = _Th(numberPoints, potentialFunc, domainStart, domainLength)
+    Id = _Ih(numberPoints)
     I_N = (h**2)*sp.identity(numberPoints+1)
 
     A = sp.kron(Center1, T) + sp.kron(Center2, Id) + sp.kron(Center3, Id) + sp.kron(Bounds, I_N)
