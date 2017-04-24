@@ -52,12 +52,6 @@ def solver_test():
     linalg_spsolve = time.clock() - start
     print('linalg_spsolve = ' + str(linalg_spsolve) + 's')
     
-    ## Exrtremely slow, do not use unless x<100 or will take forever
-#    start = time.clock()
-#    for i in range(x):
-#        sim.evolve_cg()
-#    cg = time.clock() - start
-#    print('cg = ' + str(cg) + 's')
     
     start = time.clock()
     for i in range(x):

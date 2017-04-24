@@ -10,6 +10,8 @@ import matplotlib.animation as animation
 import numpy as np
 import simulation as sm
 
+plt.close('all') # Close Figures
+
 # Define the system parameters
 dim = 1
 numberPoints = 256
@@ -42,20 +44,29 @@ sim = sm.Simulation(dim=dim, potentialFunc=potentialWell,
 sim.setPsiPulse()
 
 # Animation stuff
-fig, ax = plt.subplots()
-line, = ax.plot(x, sim.normPsi())
-
+fig, ax1 = plt.subplots()
+line, = ax1.plot(x, sim.normPsi())
+ax1.set_xlabel('x')
+ax1.set_ylabel('$|\psi(x)|^2$')
+ax1.tick_params('y', colors='b')
 
 def animate(i):
     global sim
-    waveFuncNorm = sim.evolve()
+    waveFuncNorm = sim.evolve_cgs()
     line.set_ydata(waveFuncNorm)
     return line,
-
 
 def init():
     line.set_ydata(sim.normPsi())
     return line,
 
 ani = animation.FuncAnimation(fig, animate, frames=600, interval=10)
+
+ax2 = ax1.twinx()
+ax2.plot(x, np.vectorize(potentialWell)(x), 'r')
+ax2.set_ylabel('$V(x)$')
+ax2.tick_params('y', colors='r')
+
+#fig.tight_layout()
 plt.show()
+

@@ -89,12 +89,6 @@ class Simulation:
         self.psi = sp.linalg.spsolve(self.A, self.B.dot(self.psi),
                                      permc_spec='NATURAL')
         return np.absolute(self.psi)**2
-    
-    def evolve_cg(self):
-        '''Evolves the system using Conjugate Gradient iteration'''
-        self.psi = sp.linalg.cg(self.A, self.B.dot(self.psi),
-                                     x0=self.psi)[0]
-        return np.absolute(self.psi)**2
 
     def evolve_cgs(self):
         '''Evolves the system using Conjugate Gradient squared iteration'''
