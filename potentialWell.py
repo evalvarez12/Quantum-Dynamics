@@ -5,6 +5,8 @@ created on: 24-04-2017.
 A simple animation for the 1D case
 with potential well
 """
+import quantum_plots as qplots
+
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
@@ -41,30 +43,6 @@ sim = sm.Simulation(dim=dim, potentialFunc=potentialWell,
 # Create the initial wave function
 sim.setPsiPulse()
 
-# Animation stuff
-fig, ax1 = plt.subplots()
-line, = ax1.plot(x, sim.normPsi())
-ax1.set_xlabel('x')
-ax1.set_ylabel('$|\psi(x)|^2$')
-ax1.tick_params('y', colors='b')
 
-def animate(i):
-    global sim
-    waveFuncNorm = sim.evolve()
-    line.set_ydata(waveFuncNorm)
-    return line,
-
-def init():
-    line.set_ydata(sim.normPsi())
-    return line,
-
-ani = animation.FuncAnimation(fig, animate, frames=600, interval=10)
-
-ax2 = ax1.twinx()
-ax2.plot(x, np.vectorize(potentialWell)(x), 'r')
-ax2.set_ylabel('$V(x)$')
-ax2.tick_params('y', colors='r')
-
-
-plt.show()
+ani = qplots.OneD_animation(sim, x, V=np.vectorize(potentialWell))
 

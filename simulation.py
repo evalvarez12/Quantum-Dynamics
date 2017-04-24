@@ -4,18 +4,18 @@ created on: 24-04-2017.
 
 Class that performs the evolution of the system
 """
+import matrix
+
 import numpy as np
 import scipy.signal as sg
 import scipy.sparse as sp
-import matrix
-
 
 
 class Simulation:
     '''
     This class handles the whole simulation of the quantum system.
     It takes a function for the potential and generates the discretised
-    Hamiltonian. The evoluion of the system is made using Crank-Nicholson.
+    Hamiltonian. The evolution of the system is made using Crank-Nicholson.
     '''
 
     def __init__(self, dim, potentialFunc, dirichletBC, numberPoints, 
@@ -30,14 +30,14 @@ class Simulation:
         if dirichletBC:
             self.sign = 1
 
-        H = self.getHamiltonian(np.vectorize(potentialFunc))
+        H = self._getHamiltonian(np.vectorize(potentialFunc))
         Id = sp.identity(self.numberPoints + self.sign)
 
         # Define the matrices used in CN evolution
         self.A = (Id - 1j*H*self.dt/2)
         self.B = (Id + 1j*H*self.dt/2)
 
-    def getHamiltonian(self, potentialFunc):
+    def _getHamiltonian(self, potentialFunc):
         '''
         Generates the Hamiltonian matrix using the functions
         defined in "matrix.py"
