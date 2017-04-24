@@ -4,9 +4,10 @@ created on: 19-04-2017.
 
 Test routines for matrix.py
 """
+import matrix
+
 import numpy as np
 import scipy.sparse.linalg as spl
-import matrix
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
@@ -15,7 +16,7 @@ numberPoints = 10
 
 
 def infiniteWell(x):
-    if x == 0 or x == 2:
+    if x <= 0 or x >= 2:
         return np.inf
     else:
         return 0

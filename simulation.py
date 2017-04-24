@@ -10,6 +10,7 @@ import scipy.sparse as sp
 import matrix
 
 
+
 class Simulation:
     '''
     This class handles the whole simulation of the quantum system.
@@ -17,7 +18,8 @@ class Simulation:
     Hamiltonian. The evoluion of the system is made using Crank-Nicholson.
     '''
 
-    def __init__(self, dim, potentialFunc, dirichletBC, numberPoints, startPoint, domainLength, dt):
+    def __init__(self, dim, potentialFunc, dirichletBC, numberPoints, 
+                 startPoint, domainLength, dt):
         self.dim = dim
         self.numberPoints = numberPoints
         self.startPoint = startPoint
@@ -64,23 +66,70 @@ class Simulation:
         to the right
         '''
         if self.dim == 1:
-            # x = np.linspace(self.startPoint -5, self.domainLength -5, self.numberPoints + self.sign)
+            # x = np.linspace(self.startPoint -5, 
+                    #self.domainLength -5, self.numberPoints + self.sign)
             # pulse = sg.gausspulse(x, fc=5)
             # self.psi = pulse
             # x = np.linspace(self.startPoint,
-                            # self.startPoint + self.domainLength*2/self.domainLength,
-                            # int(self.numberPoints*2/self.domainLength))
+                    # self.startPoint + self.domainLength*2/self.domainLength,
+                    # int(self.numberPoints*2/self.domainLength))
             # pulse = sg.gausspulse(x, fc=50)
-            pulse = sg.gaussian(int(self.numberPoints*2/self.domainLength), std=4)
+            pulse = sg.gaussian(int(self.numberPoints*2/self.domainLength), 
+                                std=4)
             self.psi = np.concatenate((pulse,
-                                      np.zeros(self.numberPoints - len(pulse) +
-                                       self.sign)))
-
-    def evolve(self):
-        '''Evolves the system using Crank-Nicholson'''
-        self.psi = sp.linalg.spsolve(self.A, self.B.dot(self.psi), permc_spec='NATURAL')
-        return np.absolute(self.psi)**2
+                    np.zeros(self.numberPoints - len(pulse) + self.sign)))
 
     def normPsi(self):
         '''Returns the norm of the wave function'''
+        return np.absolute(self.psi)**2
+    
+#%% Time evolutions
+    def evolve(self):
+        '''Evolves the system using Crank-Nicholson'''
+        self.psi = sp.linalg.spsolve(self.A, self.B.dot(self.psi),
+                                     permc_spec='NATURAL')
+        return np.absolute(self.psi)**2
+    
+    def evolve_cg(self):
+        '''Evolves the system using Conjugate Gradient iteration'''
+        self.psi = sp.linalg.cg(self.A, self.B.dot(self.psi),
+                                     x0=self.psi)[0]
+        return np.absolute(self.psi)**2
+
+    def evolve_cgs(self):
+        '''Evolves the system using Conjugate Gradient squared iteration'''
+        self.psi = sp.linalg.cgs(self.A, self.B.dot(self.psi),
+                                     x0=self.psi)[0]
+        return np.absolute(self.psi)**2
+    
+    def evolve_bicg(self):
+        '''Evolves the system using BIConjugate Gradient iteration'''
+        self.psi = sp.linalg.bicg(self.A, self.B.dot(self.psi),
+                                     x0=self.psi)[0]
+        return np.absolute(self.psi)**2
+    
+    def evolve_bicgstab(self):
+        '''
+        Evolves the system using BIConjugate Gradient STABilized iteration
+        '''
+        self.psi = sp.linalg.bicgstab(self.A, self.B.dot(self.psi),
+                                     x0=self.psi)[0]
+        return np.absolute(self.psi)**2
+    
+    def evolve_gmres(self):
+        '''Evolves the system using Generalized Minimal RESidual iteration'''
+        self.psi = sp.linalg.gmres(self.A, self.B.dot(self.psi),
+                                     x0=self.psi)[0]
+        return np.absolute(self.psi)**2
+    
+    def evolve_lgmres(self):
+        '''Evolves the system using the LGMRES algorithm'''
+        self.psi = sp.linalg.lgmres(self.A, self.B.dot(self.psi),
+                                     x0=self.psi)[0]
+        return np.absolute(self.psi)**2
+    
+    def evolve_qmr(self):
+        '''Evolves the system using Quasi-Minimal Residual iteration'''
+        self.psi = sp.linalg.qmr(self.A, self.B.dot(self.psi),
+                                     x0=self.psi)[0]
         return np.absolute(self.psi)**2
