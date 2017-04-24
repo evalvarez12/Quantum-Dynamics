@@ -76,12 +76,12 @@ def A2D(numberPoints, potentialFunc, domainStart, domainLength):
     Output:
         Matrix A, the discretised Hamiltonian (scipy sparse matrix)
     """
-    h = domainLength/numberPoints # Δx
+    h = domainLength/numberPoints  # Δx
 
     o = np.ones(numberPoints)
-    x = np.linspace(domainStart[0], domainStart[0] + domainLength, 
+    x = np.linspace(domainStart[0], domainStart[0] + domainLength,
                     numberPoints-1)
-    y = np.linspace(domainStart[1], domainStart[1] + domainLength, 
+    y = np.linspace(domainStart[1], domainStart[1] + domainLength,
                     numberPoints-1)
     x = np.kron(x, o)
     y = np.kron(o, y)
