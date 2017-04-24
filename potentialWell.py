@@ -26,13 +26,11 @@ if dirichletBC:
 
 x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
-
 def potentialWell(x):
     if x > 4 and x < 8:
         return 100
     else:
         return 0
-
 
 # Create the simulation for the system
 sim = sm.Simulation(dim=dim, potentialFunc=potentialWell,
@@ -52,7 +50,7 @@ ax1.tick_params('y', colors='b')
 
 def animate(i):
     global sim
-    waveFuncNorm = sim.evolve_cgs()
+    waveFuncNorm = sim.evolve()
     line.set_ydata(waveFuncNorm)
     return line,
 
@@ -67,6 +65,6 @@ ax2.plot(x, np.vectorize(potentialWell)(x), 'r')
 ax2.set_ylabel('$V(x)$')
 ax2.tick_params('y', colors='r')
 
-#fig.tight_layout()
+
 plt.show()
 
