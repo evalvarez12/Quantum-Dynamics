@@ -68,13 +68,6 @@ def solver_test():
     sim.setPsiPulse()
     start = time.clock()
     for i in range(x):
-        sim.evolve_bicg()
-    bicg = time.clock() - start
-    print('bicg = ' + str(bicg) + 's')
-    
-    sim.setPsiPulse()
-    start = time.clock()
-    for i in range(x):
         sim.evolve_bicgstab()
     bicgstab = time.clock() - start
     print('bicgstab = ' + str(bicgstab) + 's')

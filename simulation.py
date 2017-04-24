@@ -102,12 +102,6 @@ class Simulation:
                                      x0=self.psi)[0]
         return np.absolute(self.psi)**2
     
-    def evolve_bicg(self):
-        '''Evolves the system using BIConjugate Gradient iteration'''
-        self.psi = sp.linalg.bicg(self.A, self.B.dot(self.psi),
-                                     x0=self.psi)[0]
-        return np.absolute(self.psi)**2
-    
     def evolve_bicgstab(self):
         '''
         Evolves the system using BIConjugate Gradient STABilized iteration
