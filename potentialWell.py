@@ -6,6 +6,7 @@ A simple animation for the 1D case
 with potential well
 """
 import quantum_plots as qplots
+import potentials
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -28,15 +29,11 @@ if dirichletBC:
 
 x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
-def potentialWell(x):
-    if x > 6 and x < 10:
-        return 500
-    else:
-        return 0
+potentialFunc = potentials.well_1D(500, (6,10))
 
 
 # Create the simulation for the system
-sim = sm.Simulation(dim=dim, potentialFunc=potentialWell,
+sim = sm.Simulation(dim=dim, potentialFunc=potentialFunc,
                     dirichletBC=dirichletBC, numberPoints=numberPoints,
                     startPoint=startPoint, domainLength=domainLength,
                     dt=dt)
@@ -47,4 +44,4 @@ sim.setPsiPulse(energy=500, center=2)
 # plt.show()
 
 
-ani = qplots.OneD_animation(sim, x, V=np.vectorize(potentialWell))
+ani = qplots.OneD_animation(sim, x, psi='real', V=potentialFunc)

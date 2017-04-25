@@ -1,6 +1,6 @@
 # Quantum Dynamics project by Eduardo Villaseñor and Eoin Horgan
 
-## File description:
+## File Descriptions:
 simulation.py: Contains the simulation class, with methods to initialise and evolve psi.
 
 matrix.py: Functions for building discretised Hamiltonians, in 1 and 2D.

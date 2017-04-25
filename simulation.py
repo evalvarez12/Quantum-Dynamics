@@ -32,7 +32,7 @@ class Simulation:
         if dirichletBC:
             self.sign = 1
 
-        H = self._getHamiltonian(np.vectorize(potentialFunc))
+        H = self._getHamiltonian(potentialFunc)
         Id = sp.identity(self.numberPoints + self.sign)
 
         # Define the matrices used in CN evolution
