@@ -10,7 +10,7 @@ import matplotlib.animation as animation
 import os.path
 
 
-def OneD_animation(sim, x, V='none', save=False):
+def OneD_animation(sim, x, V='none', psi='real', save=False):
     """
     Make an animation of a 1D system.
 
@@ -19,6 +19,8 @@ def OneD_animation(sim, x, V='none', save=False):
         x: (N, numpy vector) x-coordinates of the domain.
         V: (vectorised function) The potential function, or "none", to
             indicate it should not be plotted.
+        psi: (string) "real" or "norm" to determine whether to plot
+            Re(Ψ) or |Ψ|^2
         save: (Boolean) Whether the animation should be saved.
     Outputs:
         Displays animation with both the evolving wavefunction norm and the
@@ -26,15 +28,22 @@ def OneD_animation(sim, x, V='none', save=False):
     """
     # Animation stuff
     fig, ax1 = plt.subplots()
-    line, = ax1.plot(x, sim.realPsi())
-    ax1.set_xlabel('x')
-    ax1.set_ylabel(r'$|\psi(x)|^2$')
+    if psi == 'real':
+        ax1.set_ylabel('$Re(\psi(x))$')
+        line, = ax1.plot(x, sim.realPsi())
+    else:
+        ax1.set_ylabel('$|\psi(x)|^2$')
+        line, = ax1.plot(x, sim.normPsi())
     ax1.tick_params('y', colors='b')
+    ax1.set_xlabel('x')
 
     def animate(i):
         # global sim # Breaks the animation when used in a function
         sim.evolve()
-        line.set_ydata(sim.realPsi())
+        if psi == 'real':
+            line.set_ydata(sim.realPsi())
+        else:
+            line.set_ydata(sim.normPsi())
         return line,
 
     ani = animation.FuncAnimation(fig, animate, frames=600, interval=10)
