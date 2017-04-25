@@ -29,7 +29,7 @@ if dirichletBC:
 x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
 def potentialWell(x):
-    if x > 4 and x < 8:
+    if 4 < x < 8:
         return 100
     else:
         return 0
