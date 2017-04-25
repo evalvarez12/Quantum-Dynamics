@@ -86,7 +86,7 @@ def A2D(numberPoints, potentialFunc, domainStart, domainLength):
     """
     h = domainLength/numberPoints  # dx
 
-    o = np.ones(numberPoints)
+    o = np.ones(numberPoints-1)
     x = np.linspace(domainStart[0], domainStart[0] + domainLength,
                     numberPoints-1)
     y = np.linspace(domainStart[1], domainStart[1] + domainLength,
@@ -95,13 +95,13 @@ def A2D(numberPoints, potentialFunc, domainStart, domainLength):
     y = np.kron(o, y)
     v = potentialFunc(x, y)
 
-    a = np.ones(numberPoints-1)*(2 + h**2 * v)
+    a = np.ones(numberPoints-1)*(2)
     b = np.ones(numberPoints-2)*(-1)
 
     Id = np.identity(numberPoints-1)
 
     A1d = sp.diags(a, 0) + sp.diags(b, 1) + sp.diags(b, -1)
-    A = sp.kron(Id, A1d) + sp.kron(A1d, Id)
+    A = sp.kron(Id, A1d) + sp.kron(A1d, Id) + h**2 * sp.diags(v, 0)
     return (1./h**2) * A
 
 
@@ -115,7 +115,7 @@ def _Ih(numberPoints):
 
 def _Th(numberPoints, potentialFunc, domainStart, domainLength):
     """Create a section of the matrix A."""
-    h = 1./numberPoints
+    h = domainLength/numberPoints
 
     o = np.ones(numberPoints+1)
     x = np.linspace(domainStart[0], domainStart[0] + domainLength,
@@ -140,7 +140,7 @@ def _Th(numberPoints, potentialFunc, domainStart, domainLength):
 
 def A2Dfull(numberPoints, potentialFunc, domainStart, domainLength):
     """Hamiltonian discretization in 2D with dirichlet boundary conditions."""
-    h = 1./numberPoints
+    h = domainLength/numberPoints
     a = np.ones(numberPoints+1)
     b = np.ones(numberPoints)*(-1)
     b2 = np.zeros(numberPoints+1)

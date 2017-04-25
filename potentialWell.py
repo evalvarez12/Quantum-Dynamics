@@ -1,9 +1,9 @@
 """
-created on: 24-04-2017.
-@author: eduardo
-
 A simple animation for the 1D case
-with potential well
+with potential well.
+
+Created on: 24-04-2017.
+@author: eduardo
 """
 import quantum_plots as qplots
 
@@ -12,7 +12,6 @@ import matplotlib.animation as animation
 import numpy as np
 import simulation as sm
 
-plt.close('all') # Close Figures
 
 # Define the system parameters
 dim = 1

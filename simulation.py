@@ -35,7 +35,7 @@ class Simulation:
             self.sign = 1
 
         H = self._getHamiltonian(np.vectorize(potentialFunc))
-        Id = sp.identity(self.numberPoints + self.sign)
+        Id = sp.identity((self.numberPoints + self.sign)**self.dim)
 
         # Define the matrices used in CN evolution
         self.A = (Id + 1j*H*self.dt/2)
@@ -62,7 +62,7 @@ class Simulation:
                 return matrix.A2Dfull(self.numberPoints, potentialFunc,
                                       self.startPoint, self.domainLength)
 
-    def setPsiPulse(self, energy, center):
+    def setPsiPulse(self, energy, center, width=.3):
         """
         Generate the initial wavefunction as a Gaussian wavepacket.
 
@@ -73,8 +73,20 @@ class Simulation:
 
             x = np.linspace(self.startPoint,
                             self.startPoint + self.domainLength,
-                            int(self.numberPoints + self.sign))
-            self.psi = np.exp(1j*np.sqrt(energy)*x)*np.exp(-0.5*(x-center)**2/.3**2)
+                            self.numberPoints + self.sign)
+            self.psi = np.exp(1j*np.sqrt(energy)*x)*np.exp(-0.5*(x-center)**2/width**2)
+
+        if self.dim == 2:
+            x = np.linspace(self.startPoint[0],
+                            self.startPoint[0] + self.domainLength,
+                            self.numberPoints + self.sign)
+
+            y = np.ones(self.numberPoints + self.sign)
+
+            psix = np.exp(1j*np.sqrt(energy)*x)*np.exp(-0.5*(x-center)**2/width**2)
+            self.psi = np.kron(psix, y)
+
+
 
     def normPsi(self):
         """Return the norm of the wave function."""

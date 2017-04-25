@@ -39,7 +39,7 @@ def OneD_animation(sim, x, V='none', save=False):
 
     ani = animation.FuncAnimation(fig, animate, frames=600, interval=10)
 
-    if not V == 'none':
+    if V != 'none':
         ax2 = ax1.twinx()
         ax2.plot(x, V(x), 'r')
         ax2.set_ylabel('$V(x)$')
