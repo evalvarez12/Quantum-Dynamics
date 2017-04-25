@@ -14,9 +14,7 @@ potentialWell.py: A showcase/prototype which simulates behaviour near a potentia
 compare_times.py: Compares the time taken to sove the system by various different scipy functions.
 
 ## TODO:
-* Initial velocity
-* 2D system animations
-* Double slit
+* 2D system surface animations 
 * Different potentials
 * Dispersion
 * Quantum Billiards
