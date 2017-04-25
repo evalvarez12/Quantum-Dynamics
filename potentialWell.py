@@ -16,7 +16,7 @@ numberPoints = 256
 dt = .001
 dirichletBC = False
 startPoint = 0
-domainLength = 10
+domainLength = 15
 
 sign = -1
 if dirichletBC:
@@ -26,7 +26,7 @@ x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
 
 def potentialWell(x):
-    if x > 4 and x < 8:
+    if x > 6 and x < 10:
         return 100
     else:
         return 0
@@ -39,23 +39,28 @@ sim = sm.Simulation(dim=dim, potentialFunc=potentialWell,
                     dt=dt)
 
 # Create the initial wave function
-sim.setPsiPulse()
+sim.setPsiPulse(energy=500, center=2)
+# plt.plot(x, sim.realPsi())
+# plt.show()
+
 
 # Animation stuff
 fig, ax = plt.subplots()
-line, = ax.plot(x, sim.normPsi())
+axes = plt.gca()
+axes.set_ylim([-1, 1])
 
+line, = ax.plot(x, sim.realPsi())
+
+
+p = np.vectorize(potentialWell)(x)
+plt.plot(x, p, 'r')
 
 def animate(i):
     global sim
-    waveFuncNorm = sim.evolve()
-    line.set_ydata(waveFuncNorm)
+    sim.evolve()
+    line.set_ydata(sim.realPsi())
     return line,
 
-
-def init():
-    line.set_ydata(sim.normPsi())
-    return line,
 
 ani = animation.FuncAnimation(fig, animate, frames=600, interval=10)
 plt.show()

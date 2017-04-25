@@ -1,9 +1,9 @@
 """
-created on: 19-04-2017.
-@author: eduardo
+Definition of the matrices that discretize the Hamiltonians in 1 and
+2 dimensions.
 
-Definition of the matrices that discretize the Hamiltonians
-in 1 and 2 dimensions
+Created on: 19-04-2017.
+@author: eduardo
 """
 
 import numpy as np
@@ -13,6 +13,7 @@ import scipy.sparse as sp
 def A1D(numberPoints, potentialFunc, domainStart, domainLength):
     """
     Hamiltonian discretization in 1d without boundaries.
+
     Uses Explicit method.
     Input:
         Number of points to evaluate on (float)
@@ -22,7 +23,7 @@ def A1D(numberPoints, potentialFunc, domainStart, domainLength):
     Output:
         Matrix A (scipy sparse matrix)
     """
-    h = domainLength/numberPoints # Δx
+    h = domainLength/numberPoints   # dx
 
     x = np.linspace(domainStart, domainStart + domainLength, numberPoints-1)
     v = potentialFunc(x)
@@ -30,12 +31,18 @@ def A1D(numberPoints, potentialFunc, domainStart, domainLength):
     a = np.ones(numberPoints-1)*(2+(h**2 * v))
     b = np.ones(numberPoints-2)*-1
     A = sp.diags(a, 0) + sp.diags(b, 1) + sp.diags(b, -1)
+
+    # Periodic boundaries
+    # A[0,-1] = -1
+    # A[-1,0] = -1
+
     return (1/h**2) * A
 
 
 def A1Dfull(numberPoints, potentialFunc, domainStart, domainLength):
     """
     Hamiltonian discretization in 1d with Dirichlet boundary conditions.
+
     Uses Explicit method to compute RHS of (A.68) in jos' book.
     Here we take hbar = 2m = 1.
     Input:
@@ -46,7 +53,7 @@ def A1Dfull(numberPoints, potentialFunc, domainStart, domainLength):
     Output:
         Matrix A, the discretised Hamiltonian (scipy sparse matrix)
     """
-    h = domainLength/numberPoints # Δx
+    h = domainLength/numberPoints  # dx
 
     x = np.linspace(domainStart, domainStart + domainLength, numberPoints+1)
     v = potentialFunc(x)
@@ -67,6 +74,7 @@ def A1Dfull(numberPoints, potentialFunc, domainStart, domainLength):
 def A2D(numberPoints, potentialFunc, domainStart, domainLength):
     """
     Hamiltonian discretization in 2d without boundaries.
+
     Here we take hbar = 2m = 1.
     Input:
         Number of points to evaluate in each axis direction (float)
@@ -76,7 +84,7 @@ def A2D(numberPoints, potentialFunc, domainStart, domainLength):
     Output:
         Matrix A, the discretised Hamiltonian (scipy sparse matrix)
     """
-    h = domainLength/numberPoints  # Δx
+    h = domainLength/numberPoints  # dx
 
     o = np.ones(numberPoints)
     x = np.linspace(domainStart[0], domainStart[0] + domainLength,
@@ -98,9 +106,7 @@ def A2D(numberPoints, potentialFunc, domainStart, domainLength):
 
 
 def _Ih(numberPoints):
-    """
-    Returns Identity matrix of given length with zeros on the extremes.
-    """
+    """Return Identity matrix of given length with zeros on the extremes."""
     Id = np.ones(numberPoints+1)
     Id[0] = 0
     Id[numberPoints] = 0
@@ -108,9 +114,7 @@ def _Ih(numberPoints):
 
 
 def _Th(numberPoints, potentialFunc, domainStart, domainLength):
-    """
-    Create a section of the matrix A
-    """
+    """Create a section of the matrix A."""
     h = 1./numberPoints
 
     o = np.ones(numberPoints+1)
@@ -133,10 +137,9 @@ def _Th(numberPoints, potentialFunc, domainStart, domainLength):
     T = sp.diags(a, 0) + sp.diags(b, -1) + sp.diags(b, 1)
     return T
 
+
 def A2Dfull(numberPoints, potentialFunc, domainStart, domainLength):
-    """
-    Hamiltonian discretization in 2D with dirichlet boundary conditions
-    """
+    """Hamiltonian discretization in 2D with dirichlet boundary conditions."""
     h = 1./numberPoints
     a = np.ones(numberPoints+1)
     b = np.ones(numberPoints)*(-1)
@@ -159,33 +162,3 @@ def A2Dfull(numberPoints, potentialFunc, domainStart, domainLength):
 
     A = sp.kron(Center1, T) + sp.kron(Center2, Id) + sp.kron(Center3, Id) + sp.kron(Bounds, I_N)
     return (1/h**2)*A
-
-
-# def f(N,c) :
-#     h = 1./N
-#     x = np.linspace(0,1,N+1)
-#     y = np.linspace(0,1,N+1)
-#     X = np.kron(np.ones(N+1),x)
-#     Y = np.kron(y,np.ones(N+1))
-#
-#     f_vec = np.sin(X * Y)*(X**2 + Y**2 + c)
-#
-#
-#     for i in range(N+1) :
-#         # X boundaries
-#         f_vec[i] = np.sin(X[i]*Y[i])
-#         f_vec[N**2 + N + i] = np.sin(X[N**2 + N +i]*Y[N**2 + N +i])
-#
-#         # Y boundaries
-#         f_vec[(N + 1)*i] = np.sin(X[(N+1)*i]*Y[(N+1)*i])
-#         f_vec[N + (N + 1)*i] = np.sin(X[N + (N+1)*i]*Y[N + (N+1)*i])
-#
-#     for i in range(1,N) :
-#         # X boundaries
-#         f_vec[N + 1 + i] += (1/h**2)*f_vec[i]
-#         f_vec[N**2 -1 + i] += (1/h**2)*f_vec[N**2 + N + i]
-#
-#         # Y boundaries
-#         f_vec[(N + 1)*i + 1] += (1/h**2)*f_vec[(N + 1)*i]
-#         f_vec[N + (N+1)*i - 1] += (1/h**2)*f_vec[N + (N+1)*i]
-#     return f_vec
