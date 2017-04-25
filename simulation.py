@@ -7,6 +7,7 @@ created on: 24-04-2017.
 """
 import numpy as np
 import scipy.sparse as sp
+import scipy.sparse.linalg as sla
 import matrix
 
 
@@ -81,5 +82,5 @@ class Simulation:
 
     def evolve(self):
         """Evolve the system using Crank-Nicholson."""
-        self.psi = sp.linalg.spsolve(self.A, self.B.dot(self.psi),
-                                     permc_spec='NATURAL')
+        self.psi = sla.spsolve(self.A, self.B.dot(self.psi),
+                               permc_spec='NATURAL')

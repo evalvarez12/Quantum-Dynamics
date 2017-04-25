@@ -36,7 +36,7 @@ def A1D(numberPoints, potentialFunc, domainStart, domainLength):
     # A[0,-1] = -1
     # A[-1,0] = -1
 
-    return (1/h**2) * A
+    return (1./h**2) * A
 
 
 def A1Dfull(numberPoints, potentialFunc, domainStart, domainLength):
@@ -68,7 +68,7 @@ def A1Dfull(numberPoints, potentialFunc, domainStart, domainLength):
     b[numberPoints-1] = 0
 
     A = sp.diags(a, 0) + sp.diags(b, 1) + sp.diags(b, -1)
-    return (1/h**2) * A
+    return (1./h**2) * A
 
 
 def A2D(numberPoints, potentialFunc, domainStart, domainLength):
@@ -102,7 +102,7 @@ def A2D(numberPoints, potentialFunc, domainStart, domainLength):
 
     A1d = sp.diags(a, 0) + sp.diags(b, 1) + sp.diags(b, -1)
     A = sp.kron(Id, A1d) + sp.kron(A1d, Id)
-    return (1/h**2) * A
+    return (1./h**2) * A
 
 
 def _Ih(numberPoints):
@@ -161,4 +161,4 @@ def A2Dfull(numberPoints, potentialFunc, domainStart, domainLength):
     I_N = (h**2)*sp.identity(numberPoints+1)
 
     A = sp.kron(Center1, T) + sp.kron(Center2, Id) + sp.kron(Center3, Id) + sp.kron(Bounds, I_N)
-    return (1/h**2)*A
+    return (1./h**2)*A
