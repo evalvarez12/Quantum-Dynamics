@@ -5,8 +5,6 @@ created on: 24-04-2017.
 @author: eduardo
 
 """
-import matrix
-
 import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as sla
@@ -90,32 +88,4 @@ class Simulation:
         self.psi = sp.linalg.spsolve(self.A, self.B.dot(self.psi),
                                      permc_spec='NATURAL')
 
-    def evolve_cgs(self):
-        """Evolve the system using Conjugate Gradient squared iteration."""
-        self.psi = sp.linalg.cgs(self.A, self.B.dot(self.psi),
-                                 x0=self.psi)[0]
-        return np.absolute(self.psi)**2
 
-    def evolve_bicgstab(self):
-        """Evolve the system using BIConjugate Gradient STABilized iteration."""
-        self.psi = sp.linalg.bicgstab(self.A, self.B.dot(self.psi),
-                                      x0=self.psi)[0]
-        return np.absolute(self.psi)**2
-
-    def evolve_gmres(self):
-        """Evolve the system using Generalized Minimal RESidual iteration."""
-        self.psi = sp.linalg.gmres(self.A, self.B.dot(self.psi),
-                                   x0=self.psi)[0]
-        return np.absolute(self.psi)**2
-
-    def evolve_lgmres(self):
-        """Evolve the system using the LGMRES algorithm."""
-        self.psi = sp.linalg.lgmres(self.A, self.B.dot(self.psi),
-                                    x0=self.psi)[0]
-        return np.absolute(self.psi)**2
-
-    def evolve_qmr(self):
-        """Evolve the system using Quasi-Minimal Residual iteration."""
-        self.psi = sp.linalg.qmr(self.A, self.B.dot(self.psi),
-                                 x0=self.psi)[0]
-        return np.absolute(self.psi)**2
