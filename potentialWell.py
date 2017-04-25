@@ -20,7 +20,7 @@ numberPoints = 256
 dt = .001
 dirichletBC = False
 startPoint = 0
-domainLength = 10
+domainLength = 15
 
 sign = -1
 if dirichletBC:
@@ -29,10 +29,11 @@ if dirichletBC:
 x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
 def potentialWell(x):
-    if 4 < x < 8:
-        return 100
+    if x > 6 and x < 10:
+        return 500
     else:
         return 0
+
 
 # Create the simulation for the system
 sim = sm.Simulation(dim=dim, potentialFunc=potentialWell,
@@ -41,8 +42,9 @@ sim = sm.Simulation(dim=dim, potentialFunc=potentialWell,
                     dt=dt)
 
 # Create the initial wave function
-sim.setPsiPulse()
+sim.setPsiPulse(energy=500, center=2)
+# plt.plot(x, sim.realPsi())
+# plt.show()
 
 
 ani = qplots.OneD_animation(sim, x, V=np.vectorize(potentialWell))
-
