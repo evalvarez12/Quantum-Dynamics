@@ -26,20 +26,16 @@ if dirichletBC:
 x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
 
-def potentialWell(x):
-    mag = 500
-    domain = [6, 10]
-    if domain[0] < x < domain[1]:
-        return mag
-    else:
-        return 0
-
-
-potentialFunc = np.vectorize(potentialWell)
+def gaussian(x):
+    mag = 200
+    center = 4
+    std = 1
+    V = mag * np.exp(-(x-center)**2/(2*std**2))
+    return V
 
 
 # Create the simulation for the system
-sim = sm.Simulation(dim=dim, potentialFunc=potentialFunc,
+sim = sm.Simulation(dim=dim, potentialFunc=gaussian,
                     dirichletBC=dirichletBC, numberPoints=numberPoints,
                     startPoint=startPoint, domainLength=domainLength,
                     dt=dt)
@@ -50,4 +46,4 @@ sim.setPsiPulse(energy=500, center=2)
 # plt.show()
 
 
-ani = qplots.OneD_animation(sim, x, psi='real', V=potentialFunc)
+ani = qplots.OneD_animation(sim, x, psi='real', V=gaussian)
