@@ -1,5 +1,5 @@
 """
-Simulation of the double slit experiment.
+Simulation of Rutherford dispersion.
 
 Created on: 28-04-2017.
 @author: eduardo
@@ -28,21 +28,13 @@ x = np.linspace(startPoint[0], startPoint[0] + domainLength, allPoints)
 y = np.linspace(startPoint[1], startPoint[1] + domainLength, allPoints).reshape(-1, 1)
 
 
-def doubleSlit(x, y):
-    sS = .3
-    sW = .1
-    spX = .5
-    spY = 1
-    if x > spX and x < spX+.05 and (y < spY-sS/2. or y > spY+sS/2.):
-        return 50000
-    if x > spX and x < spX+.05 and (y > spY-sS/2.+sW and y < spY+sS/2.-sW):
-        return 50000
-    else:
-        return 0
-
+def dispersion(x, y):
+    center = [0.8, 1.]
+    r = np.linalg.norm([x - center[0], y - center[1]])
+    return 1./r**2
 
 # Create the simulation for the system
-sim = sm.Simulation(dim=dim, potentialFunc=doubleSlit,
+sim = sm.Simulation(dim=dim, potentialFunc=dispersion,
                     dirichletBC=dirichletBC, numberPoints=numberPoints,
                     startPoint=startPoint, domainLength=domainLength,
                     dt=dt)
