@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import simulation as sm
+import quantum_plots as qplots
 
 
 # Define the system parameters
@@ -31,7 +32,12 @@ y = np.linspace(startPoint[1], startPoint[1] + domainLength, allPoints).reshape(
 def dispersion(x, y):
     center = [0.8, 1.]
     r = np.linalg.norm([x - center[0], y - center[1]])
-    return 1./r**2
+    return 10./r**2
+
+def dispersionVis(x, y):
+    center = [0.8, 1.]
+    r = np.linalg.norm([x - center[0], y - center[1]])
+    return 10./((r +1)**2)
 
 # Create the simulation for the system
 sim = sm.Simulation(dim=dim, potentialFunc=dispersion,
@@ -45,18 +51,18 @@ sim.setPsiPulse(energy=500, center=.1, width=.1)
 
 
 # Animation stuff
-fig = plt.figure()
-im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
-                animated=True, cmap=plt.get_cmap('jet'))
+# fig = plt.figure()
+# im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
+#                 animated=True, cmap=plt.get_cmap('jet'))
+#
+# # plt.imshow(np.vectorize(doubleSlit)(x, y), cmap=plt.get_cmap('rainbow'), alpha=1)
+#
+# def animate(i):
+#     global sim  # Breaks the animation when used in a function
+#     sim.evolve()
+#     im.set_array(np.transpose(sim.normPsi().reshape(allPoints, allPoints)))
+#     return im,
 
-# plt.imshow(np.vectorize(doubleSlit)(x, y), cmap=plt.get_cmap('rainbow'), alpha=1)
+ani = qplots.TwoD_sc(sim, [x, y], allPoints, psi="norm", potentialFunc=dispersionVis, save=False)
 
-def animate(i):
-    global sim  # Breaks the animation when used in a function
-    sim.evolve()
-    im.set_array(np.transpose(sim.normPsi().reshape(allPoints, allPoints)))
-    return im,
-
-ani = animation.FuncAnimation(fig, animate, frames=600, interval=10, blit=True)
-
-plt.show()
+# plt.show()

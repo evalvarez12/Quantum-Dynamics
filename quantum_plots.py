@@ -62,7 +62,7 @@ def OneD_animation(sim, x, V='none', psi='real', save=False):
     return ani
 
 
-def TwoD_sc(sim, domain, allPoints, psi, potentialFunc, save=False):
+def TwoD_sc(sim, domain, allPoints, potentialFunc, psi="norm", save=False):
     """
     Make a 2D animation of a 2D system.
 
@@ -79,17 +79,21 @@ def TwoD_sc(sim, domain, allPoints, psi, potentialFunc, save=False):
     # Animation stuff
     fig = plt.figure()
     im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
-                    animated=True, cmap=plt.get_cmap('Blues'))
+                    animated=True, cmap=plt.get_cmap('jet'), alpha=.9)
+    plt.imshow(np.vectorize(potentialFunc)(domain[0], domain[1]), cmap=plt.get_cmap('Greys'), alpha=1)
 
-    # plt.imshow(np.vectorize(potentialFunc)(domain[0], domain[1]), cmap=plt.get_cmap('Greys'),
-            #    alpha=.2)
+
     # plt.show()
     def animate(i):
         sim.evolve()
-        im.set_array(np.transpose(sim.normPsi().reshape(allPoints,
-                     allPoints)))
-        return im,
+        if psi == "norm":
+            im.set_array(np.transpose(sim.normPsi().reshape(allPoints,
+                         allPoints)))
+        else:
+            im.set_array(np.transpose(sim.realPsi().reshape(allPoints,
+                         allPoints)))
 
+        return im,
 
     ani = animation.FuncAnimation(fig, animate, frames=600,
                                   interval=10, blit=True)
