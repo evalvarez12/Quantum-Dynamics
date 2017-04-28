@@ -27,7 +27,7 @@ if dirichletBC:
 allPoints = numberPoints + sign
 
 x = np.linspace(startPoint[0], startPoint[0] + domainLength, allPoints)
-y = np.linspace(startPoint[1], startPoint[1] + domainLength, 
+y = np.linspace(startPoint[1], startPoint[1] + domainLength,
                 allPoints).reshape(-1, 1)
 
 
@@ -60,7 +60,7 @@ sim.setPsiPulse(energy=500, center=.1, width=.1)
 #im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
 #                animated=True, cmap=plt.get_cmap('jet'))
 #
-## plt.imshow(np.vectorize(doubleSlit)(x, y), cmap=plt.get_cmap('rainbow'), 
+## plt.imshow(np.vectorize(doubleSlit)(x, y), cmap=plt.get_cmap('rainbow'),
 ##            alpha=1)
 #
 #
@@ -75,4 +75,4 @@ sim.setPsiPulse(energy=500, center=.1, width=.1)
 #
 #plt.show()
 
-ani = qplots.TwoD_sc(sim, allPoints, psi='norm', save=False)
+ani = qplots.TwoD_sc(sim, [x, y], allPoints, psi="norm", potentialFunc=doubleSlit, save=False)

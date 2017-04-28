@@ -62,7 +62,7 @@ def OneD_animation(sim, x, V='none', psi='real', save=False):
     return ani
 
 
-def TwoD_sc(sim, allPoints, psi='real', save=False):
+def TwoD_sc(sim, domain, allPoints, psi, potentialFunc, save=False):
     """
     Make a 2D animation of a 2D system.
 
@@ -70,7 +70,7 @@ def TwoD_sc(sim, allPoints, psi='real', save=False):
         sim: (simulation object) An object of the simulation class.
         psi: (string) "real" or "norm" to determine whether to plot
             Re(Ψ) or |Ψ|^2
-        allPoints: 
+        allPoints:
         save: (Boolean) Whether the animation should be saved.
     Outputs:
         Displays animation with both the evolving wavefunction norm and the
@@ -79,22 +79,21 @@ def TwoD_sc(sim, allPoints, psi='real', save=False):
     # Animation stuff
     fig = plt.figure()
     im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
-                    animated=True, cmap=plt.get_cmap('jet'))
+                    animated=True, cmap=plt.get_cmap('Blues'))
 
+    # plt.imshow(np.vectorize(potentialFunc)(domain[0], domain[1]), cmap=plt.get_cmap('Greys'),
+            #    alpha=.2)
+    # plt.show()
     def animate(i):
         sim.evolve()
-        if psi == 'real':
-            im.set_array(np.transpose(sim.realPsi().reshape(allPoints, 
-                                                            allPoints)))
-        else:
-            im.set_array(np.transpose(sim.normPsi().reshape(allPoints, 
-                                                            allPoints)))
-        return im
+        im.set_array(np.transpose(sim.normPsi().reshape(allPoints,
+                     allPoints)))
+        return im,
 
-    
-    ani = animation.FuncAnimation(fig, animate, frames=600, 
+
+    ani = animation.FuncAnimation(fig, animate, frames=600,
                                   interval=10, blit=True)
-    
+
     plt.show()
 
     if save:
