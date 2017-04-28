@@ -28,7 +28,7 @@ if dirichletBC:
 
 x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
-potentialFunc = potentials.well_1D(500, (6,10))
+potentialFunc = potentials.well_1D(500, (6, 10))
 
 
 # Create the simulation for the system
