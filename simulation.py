@@ -64,7 +64,7 @@ class Simulation:
         """
         Generate the initial wavefunction as a Gaussian wavepacket.
 
-        TODO : Fix to make the initial wave paket to start going
+        TODO : Fix to make the initial wave packet to start going
         to the right.
         """
         if self.dim == 1:
@@ -72,7 +72,8 @@ class Simulation:
             x = np.linspace(self.startPoint,
                             self.startPoint + self.domainLength,
                             self.numberPoints + self.sign)
-            self.psi = np.exp(1j*np.sqrt(energy)*x)*np.exp(-0.5*(x-center)**2/width**2)
+            self.psi = np.exp(1j * np.sqrt(energy) * x) \
+                       * np.exp(-0.5 * (x-center)**2 / width**2)
 
         if self.dim == 2:
             x = np.linspace(self.startPoint[0],
@@ -81,10 +82,9 @@ class Simulation:
 
             y = np.ones(self.numberPoints + self.sign)
 
-            psix = np.exp(1j*np.sqrt(energy)*x)*np.exp(-0.5*(x-center)**2/width**2)
+            psix = np.exp(1j * np.sqrt(energy) * x) \
+                   * np.exp(-0.5 * (x-center)**2 / width**2)
             self.psi = np.kron(psix, y)
-
-
 
     def normPsi(self):
         """Return the norm of the wave function."""

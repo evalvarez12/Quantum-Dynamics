@@ -160,5 +160,6 @@ def A2Dfull(numberPoints, potentialFunc, domainStart, domainLength):
     Id = _Ih(numberPoints)
     I_N = (h**2)*sp.identity(numberPoints+1)
 
-    A = sp.kron(Center1, T) + sp.kron(Center2, Id) + sp.kron(Center3, Id) + sp.kron(Bounds, I_N)
+    A = sp.kron(Center1, T) + sp.kron(Center2, Id) + sp.kron(Center3, Id) \
+      + sp.kron(Bounds, I_N)
     return (1./h**2)*A

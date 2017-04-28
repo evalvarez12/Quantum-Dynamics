@@ -5,8 +5,6 @@ Created on Mon Apr 24 15:10:24 2017
 @author: Eoin
 """
 
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 import simulation as sm
 import time
@@ -26,6 +24,7 @@ if dirichletBC:
 
 x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
+
 def potentialWell(x):
     if x > 6 and x < 10:
         return 500
@@ -42,58 +41,63 @@ sim = sm.Simulation(dim=dim, potentialFunc=potentialWell,
 # Create the initial wave function
 sim.setPsiPulse(energy=500, center=2)
 
-#%% Evolution methods
+
+# %% Evolution methods
 
 def evolve_cgs(sim):
     """Evolve the system using Conjugate Gradient squared iteration."""
     sim.psi = sp.linalg.cgs(sim.A, sim.B.dot(sim.psi),
-                             x0=sim.psi)[0]
+                            x0=sim.psi)[0]
     return np.absolute(sim.psi)**2
+
 
 def evolve_bicgstab(sim):
     """Evolve the system using BIConjugate Gradient STABilized iteration."""
     sim.psi = sp.linalg.bicgstab(sim.A, sim.B.dot(sim.psi),
-                                  x0=sim.psi)[0]
+                                 x0=sim.psi)[0]
     return np.absolute(sim.psi)**2
+
 
 def evolve_gmres(sim):
     """Evolve the system using Generalized Minimal RESidual iteration."""
     sim.psi = sp.linalg.gmres(sim.A, sim.B.dot(sim.psi),
-                               x0=sim.psi)[0]
+                              x0=sim.psi)[0]
     return np.absolute(sim.psi)**2
+
 
 def evolve_lgmres(sim):
     """Evolve the system using the LGMRES algorithm."""
     sim.psi = sp.linalg.lgmres(sim.A, sim.B.dot(sim.psi),
-                                x0=sim.psi)[0]
+                               x0=sim.psi)[0]
     return np.absolute(sim.psi)**2
+
 
 def evolve_qmr(sim):
     """Evolve the system using Quasi-Minimal Residual iteration."""
     sim.psi = sp.linalg.qmr(sim.A, sim.B.dot(sim.psi),
-                             x0=sim.psi)[0]
+                            x0=sim.psi)[0]
     return np.absolute(sim.psi)**2
-    
-#%% Speed testing
+
+# %% Speed testing
 
 
 def solver_test():
     '''Tests multiple solvers to find the fastest. Outputs times to console'''
     x = 10000
-    
+
     start = time.clock()
     for i in range(x):
         sim.evolve()
     linalg_spsolve = time.clock() - start
     print('linalg_spsolve = ' + str(linalg_spsolve) + 's')
-    
+
     sim.setPsiPulse(energy=500, center=2)
     start = time.clock()
     for i in range(x):
         evolve_cgs(sim)
     cgs = time.clock() - start
     print('cgs = ' + str(cgs) + 's')
-    
+
     sim.setPsiPulse(energy=500, center=2)
     start = time.clock()
     for i in range(x):
@@ -114,13 +118,13 @@ def solver_test():
         evolve_lgmres(sim)
     lgmres = time.clock() - start
     print('lgmres = ' + str(lgmres) + 's')
-    
+
     sim.setPsiPulse(energy=500, center=2)
     start = time.clock()
     for i in range(x):
         evolve_qmr(sim)
     qmr = time.clock() - start
-    print('qmr = ' + str(qmr) + 's')  
-      
+    print('qmr = ' + str(qmr) + 's')
+
 
 solver_test()

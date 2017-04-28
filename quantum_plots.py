@@ -5,6 +5,7 @@ Hold all the methods for plotting and saving animations.
 Created on Tue Apr 25 00:38:00 2017
 @author: Eoin
 """
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import os.path
@@ -38,7 +39,6 @@ def OneD_animation(sim, x, V='none', psi='real', save=False):
     ax1.set_xlabel('x')
 
     def animate(i):
-        # global sim # Breaks the animation when used in a function
         sim.evolve()
         if psi == 'real':
             line.set_ydata(sim.realPsi())
@@ -54,6 +54,47 @@ def OneD_animation(sim, x, V='none', psi='real', save=False):
         ax2.set_ylabel('$V(x)$')
         ax2.tick_params('y', colors='r')
 
+    plt.show()
+
+    if save:
+        _ani_save(ani, sim)
+
+    return ani
+
+
+def TwoD_sc(sim, allPoints, psi='real', save=False):
+    """
+    Make a 2D animation of a 2D system.
+
+    Inputs:
+        sim: (simulation object) An object of the simulation class.
+        psi: (string) "real" or "norm" to determine whether to plot
+            Re(Ψ) or |Ψ|^2
+        allPoints: 
+        save: (Boolean) Whether the animation should be saved.
+    Outputs:
+        Displays animation with both the evolving wavefunction norm and the
+            potential function influencing it.
+    """
+    # Animation stuff
+    fig = plt.figure()
+    im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
+                    animated=True, cmap=plt.get_cmap('jet'))
+
+    def animate(i):
+        sim.evolve()
+        if psi == 'real':
+            im.set_array(np.transpose(sim.realPsi().reshape(allPoints, 
+                                                            allPoints)))
+        else:
+            im.set_array(np.transpose(sim.normPsi().reshape(allPoints, 
+                                                            allPoints)))
+        return im
+
+    
+    ani = animation.FuncAnimation(fig, animate, frames=600, 
+                                  interval=10, blit=True)
+    
     plt.show()
 
     if save:
@@ -92,9 +133,9 @@ def _ani_save(ani, sim):
         dBC = 'no'
 
     filepath = os.path.join("Saved Animations",
-                            "D = " + str(sim.dim) + \
-                            ", n = " + str(sim.numberPoints) + \
-                            ", L = " + str(sim.domainLength) + \
-                            ", dBC = " + dBC + \
+                            "D = " + str(sim.dim) +
+                            ", n = " + str(sim.numberPoints) +
+                            ", L = " + str(sim.domainLength) +
+                            ", dBC = " + dBC +
                             ", dt = " + str(sim.dt) + '.mp4')
     ani.save(filepath, writer=writer)
