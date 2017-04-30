@@ -52,5 +52,3 @@ sim.setPsiPulse(energy=500, center=.1, width=.1)
 
 ani = qplots.TwoD_sc(sim, [x, y], allPoints, psi="norm",
                      potentialFunc=dispersionVis, save=False)
-
-# plt.show()
