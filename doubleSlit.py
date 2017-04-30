@@ -9,7 +9,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import simulation as sm
-import potentials
 import quantum_plots as qplots
 
 
@@ -32,10 +31,10 @@ y = np.linspace(startPoint[1], startPoint[1] + domainLength,
 
 
 def doubleSlit(x, y):
-    sS = .3
-    sW = .1
-    spX = .5
-    spY = 1
+    sS = .3  # Slit separation
+    sW = .1  # Half slit width
+    spX = .5 # X coordinate start
+    spY = 1  # Y coordinate of center of slits
     if x > spX and x < spX+.05 and (y < spY-sS/2. or y > spY+sS/2.):
         return 50000
     if x > spX and x < spX+.05 and (y > spY-sS/2.+sW and y < spY+sS/2.-sW):
