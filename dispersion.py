@@ -6,8 +6,6 @@ Created on: 28-04-2017.
 
 """
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import simulation as sm
 import quantum_plots as qplots
 
@@ -26,7 +24,8 @@ if dirichletBC:
 allPoints = numberPoints + sign
 
 x = np.linspace(startPoint[0], startPoint[0] + domainLength, allPoints)
-y = np.linspace(startPoint[1], startPoint[1] + domainLength, allPoints).reshape(-1, 1)
+y = np.linspace(startPoint[1], startPoint[1] + domainLength,
+                allPoints).reshape(-1, 1)
 
 
 def dispersion(x, y):
@@ -34,10 +33,12 @@ def dispersion(x, y):
     r = np.linalg.norm([x - center[0], y - center[1]])
     return 10./r**2
 
+
 def dispersionVis(x, y):
     center = [0.8, 1.]
     r = np.linalg.norm([x - center[0], y - center[1]])
-    return 10./((r +1)**2)
+    return 10./((r + 1)**2)
+
 
 # Create the simulation for the system
 sim = sm.Simulation(dim=dim, potentialFunc=dispersion,
@@ -47,22 +48,9 @@ sim = sm.Simulation(dim=dim, potentialFunc=dispersion,
 
 # Create the initial wave function
 sim.setPsiPulse(energy=500, center=.1, width=.1)
-# plt.show()
 
 
-# Animation stuff
-# fig = plt.figure()
-# im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
-#                 animated=True, cmap=plt.get_cmap('jet'))
-#
-# # plt.imshow(np.vectorize(doubleSlit)(x, y), cmap=plt.get_cmap('rainbow'), alpha=1)
-#
-# def animate(i):
-#     global sim  # Breaks the animation when used in a function
-#     sim.evolve()
-#     im.set_array(np.transpose(sim.normPsi().reshape(allPoints, allPoints)))
-#     return im,
-
-ani = qplots.TwoD_sc(sim, [x, y], allPoints, psi="norm", potentialFunc=dispersionVis, save=False)
+ani = qplots.TwoD_sc(sim, [x, y], allPoints, psi="norm",
+                     potentialFunc=dispersionVis, save=False)
 
 # plt.show()

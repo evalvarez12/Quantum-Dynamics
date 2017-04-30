@@ -6,8 +6,6 @@ Created on: 28-04-2017.
 
 """
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import simulation as sm
 import quantum_plots as qplots
 
@@ -31,10 +29,10 @@ y = np.linspace(startPoint[1], startPoint[1] + domainLength,
 
 
 def doubleSlit(x, y):
-    sS = .3  # Slit separation
-    sW = .1  # Half slit width
-    spX = .5 # X coordinate start
-    spY = 1  # Y coordinate of center of slits
+    sS = .3   # Slit separation
+    sW = .1   # Half slit width
+    spX = .5  # X coordinate start
+    spY = 1   # Y coordinate of center of slits
     if x > spX and x < spX+.05 and (y < spY-sS/2. or y > spY+sS/2.):
         return 50000
     if x > spX and x < spX+.05 and (y > spY-sS/2.+sW and y < spY+sS/2.-sW):
@@ -51,27 +49,6 @@ sim = sm.Simulation(dim=dim, potentialFunc=doubleSlit,
 
 # Create the initial wave function
 sim.setPsiPulse(energy=500, center=.1, width=.1)
-# plt.show()
 
-
-## Animation stuff
-#fig = plt.figure()
-#im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
-#                animated=True, cmap=plt.get_cmap('jet'))
-#
-## plt.imshow(np.vectorize(doubleSlit)(x, y), cmap=plt.get_cmap('rainbow'),
-##            alpha=1)
-#
-#
-#def animate(i):
-#    global sim  # Breaks the animation when used in a function
-#    sim.evolve()
-#    im.set_array(np.transpose(sim.normPsi().reshape(allPoints, allPoints)))
-#    return im,
-#
-#
-#ani = animation.FuncAnimation(fig, animate, frames=600, interval=10, blit=True)
-#
-#plt.show()
-
-ani = qplots.TwoD_sc(sim, [x, y], allPoints, psi="norm", potentialFunc=doubleSlit, save=False)
+ani = qplots.TwoD_sc(sim, [x, y], allPoints, psi="norm",
+                     potentialFunc=doubleSlit, save=False)

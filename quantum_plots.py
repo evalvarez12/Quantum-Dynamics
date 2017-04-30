@@ -77,14 +77,13 @@ def TwoD_sc(sim, domain, allPoints, potentialFunc, psi="norm", save=False):
             potential function influencing it.
     """
     pot_data = np.vectorize(potentialFunc)(domain[0], domain[1])
-    
+
     fig = plt.figure()
     im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
-                    animated=True, cmap=plt.get_cmap('jet'), alpha=.9)
-    plt.imshow(pot_data, cmap=plt.get_cmap('Greys'), alpha=1)
+                    animated=True, cmap=plt.get_cmap('jet'), alpha=.9,
+                    origin='lower')
+    plt.imshow(pot_data, cmap=plt.get_cmap('Greys'), alpha=1, origin='lower')
 
-
-    # plt.show()
     def animate(i):
         sim.evolve()
         if psi == "norm":

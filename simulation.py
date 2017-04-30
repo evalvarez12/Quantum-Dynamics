@@ -60,12 +60,19 @@ class Simulation:
                 return matrix.A2Dfull(self.numberPoints, potentialFunc,
                                       self.startPoint, self.domainLength)
 
-    def setPsiPulse(self, energy, center, width=.3):
+    def setPsiPulse(self, energy, center, vel_x=1, vel_y=0, width=.3):
         """
-        Generate the initial wavefunction as a Gaussian wavepacket.
-
-        TODO : Fix to make the initial wave packet to start going
-        to the right.
+        Generate the initial wavefunction as a Gaussian wavepacket. By default
+        it moves to the right.
+        Inputs:
+            energy: (int/float) The waves energy/size.
+            center: (float or tuple) Either x or [x,y], for a guassian line
+                    profile or 2D gaussian, respectively.
+            vel_x:  Velocity multiplier in the x-direction.
+            vel_y:  Velocity multiplier in the y-direction.
+            width:  Standard deviation of the Gaussian wave pulse.
+        Output:
+            Sets psi of the object to have the desired wave form.
         """
         if self.dim == 1:
 
@@ -73,18 +80,30 @@ class Simulation:
                             self.startPoint + self.domainLength,
                             self.numberPoints + self.sign)
             self.psi = np.exp(1j * np.sqrt(energy) * x) * \
-                              np.exp(-0.5 * (x-center)**2 / width**2)
+                          np.exp(-0.5 * (x-center)**2 / width**2)
 
         if self.dim == 2:
             x = np.linspace(self.startPoint[0],
                             self.startPoint[0] + self.domainLength,
                             self.numberPoints + self.sign)
 
-            y = np.ones(self.numberPoints + self.sign)
+            y = np.linspace(self.startPoint[1],
+                            self.startPoint[1] + self.domainLength,
+                            self.numberPoints + self.sign)
 
-            psix = np.exp(1j * np.sqrt(energy) * x) * \
+            if type(center) == int or type(center) == float:
+                # Check to see if center has one argument (2D Line) 
+                psix = np.exp(1j * vel_x * np.sqrt(energy) * x) * \
                           np.exp(-0.5 * (x-center)**2 / width**2)
-            self.psi = np.kron(psix, y)
+                y = np.ones(self.numberPoints + self.sign)
+                self.psi = np.kron(psix, y)
+            else:
+                # Center has two arguments (2D Gaussian) 
+                psix = np.exp(1j * vel_x * np.sqrt(energy) * x) * \
+                          np.exp(-0.5 * (x-center[0])**2 / width**2)
+                psiy = np.exp(1j * vel_y * np.sqrt(energy) * y) * \
+                          np.exp(-0.5 * (x-center[1])**2 / width**2)
+                self.psi = np.kron(psix, psiy)
 
     def normPsi(self):
         """Return the norm of the wave function."""
