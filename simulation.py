@@ -26,6 +26,7 @@ class Simulation:
         self.numberPoints = numberPoints
         self.startPoint = startPoint
         self.domainLength = domainLength
+        self.time = 0
         self.dt = dt
 
         self.sign = -1
@@ -42,6 +43,7 @@ class Simulation:
 
         # Initialize wavefunction
         self.psi = np.zeros(self.allPoints**self.dim, dtype=np.complex128)
+
     def _getHamiltonian(self, potentialFunc):
         """
         Generate the Hamiltonian matrix using the functions
@@ -63,7 +65,7 @@ class Simulation:
                 return matrix.A2Dfull(self.numberPoints, potentialFunc,
                                       self.startPoint, self.domainLength)
 
-    def setPsiPulse(self, pulse, energy, center, vel=1, width=.2 ):
+    def setPsiPulse(self, pulse, energy, center, vel=1, width=.2):
         """
         Generate the initial wavefunction as a Gaussian wavepacket. By default
         it moves to the right.
@@ -84,10 +86,9 @@ class Simulation:
                                 self.startPoint + self.domainLength,
                                 self.allPoints)
                 self.pulse = np.exp(1j * vel * np.sqrt(energy) * x) * \
-                              np.exp(-0.5 * (x-center)**2 / width**2)
+                                    np.exp(-0.5 * (x-center)**2 / width**2)
             else:
                 self.pulse = np.zeros(allPoints)
-
 
         if self.dim == 2:
             x = np.linspace(self.startPoint[0],
@@ -107,15 +108,14 @@ class Simulation:
             if pulse == "circular":
                 # Center has two arguments (2D Gaussian)
                 psix = np.exp(1j * vel[0] * np.sqrt(energy) * x) * \
-                          np.exp(-0.5 * (x-center[0])**2 / width**2)
+                              np.exp(-0.5 * (x-center[0])**2 / width**2)
                 psiy = np.exp(1j * vel[1] * np.sqrt(energy) * y) * \
-                          np.exp(-0.5 * (x-center[1])**2 / width**2)
+                              np.exp(-0.5 * (x-center[1])**2 / width**2)
                 self.pulse = np.kron(psix, psiy)
             else:
                 self.pulse = np.zeros(allPoints**2)
 
-
-        self.psi += self.pulse
+        self.psi += self.pulse/np.linalg.norm(self.pulse)
 
     def applyPulse(self):
         self.psi += self.pulse
@@ -131,5 +131,15 @@ class Simulation:
     # Time evolutions
     def evolve(self):
         """Evolve the system using Crank-Nicholson."""
+        self.time += self.dt
+        self.psi = sp.linalg.spsolve(self.A, self.B.dot(self.psi),
+                                     permc_spec='NATURAL')
+
+    def evolvePulsed(self, freq):
+        """Evolve the system using Crank-Nicholson."""
+        self.time += 1
+        if self.time % (freq) == 0:
+            self.psi += self.pulse
+            self.psi = self.psi/np.linalg.norm(self.psi)
         self.psi = sp.linalg.spsolve(self.A, self.B.dot(self.psi),
                                      permc_spec='NATURAL')

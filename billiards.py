@@ -18,7 +18,6 @@ dt = .001
 dirichletBC = False
 startPoint = [0, 0]
 domainLength = 1
-pulseFreq = 100
 
 sign = -1
 if dirichletBC:
@@ -30,12 +29,22 @@ y = np.linspace(startPoint[1], startPoint[1] + domainLength,
                 allPoints).reshape(-1, 1)
 
 
-def table(x, y):
-    return 0
+def dispersion(x, y):
+    center = [0.5, 0.5]
+    r = np.linalg.norm([x - center[0], y - center[1]])
+    return 15./r**2
+
+def dispersionVis(x, y):
+    center = [0.5, 0.5]
+    r = np.linalg.norm([x - center[0], y - center[1]])
+    if r < .2:
+        return 5000
+    else:
+        return 0
 
 
 # Create the simulation for the system
-sim = sm.Simulation(dim=dim, potentialFunc=table,
+sim = sm.Simulation(dim=dim, potentialFunc=dispersionVis,
                     dirichletBC=dirichletBC, numberPoints=numberPoints,
                     startPoint=startPoint, domainLength=domainLength,
                     dt=dt)
@@ -55,8 +64,10 @@ vel = np.random.uniform(low=-1, high=1, size=(2, 1))
 #     Psi = Psi + sim.psi
 
 # sim.psi = Psi
-sim.setPsiPulse(pulse="circular", energy=500, center=[.5, .5], vel=[0, 0], width=.1)
+sim.setPsiPulse(pulse="circular", energy=500, center=[.2, .5], vel=[.4, .8], width=.1)
 
+for i in range(30):
+    sim.evolve()
 
 ani = qplots.animation2D(sim, [x, y], allPoints, psi="norm",
-                         potentialFunc=table, save=False)
+                         potentialFunc=dispersionVis, save=False)
