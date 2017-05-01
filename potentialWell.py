@@ -27,7 +27,7 @@ x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
 
 def potentialWell(x):
-    mag = 500
+    mag = 200
     domain = [6, 10]
     if domain[0] < x < domain[1]:
         return mag
@@ -45,9 +45,9 @@ sim = sm.Simulation(dim=dim, potentialFunc=potentialFunc,
                     dt=dt)
 
 # Create the initial wave function
-sim.setPsiPulse(energy=500, center=2)
+sim.setPsiPulse(pulse="plane", energy=500, center=2)
 # plt.plot(x, sim.realPsi())
 # plt.show()
 
 
-ani = qplots.OneD_animation(sim, x, psi='real', V=potentialFunc)
+ani = qplots.animation1D(sim, x, psi='real', V=potentialFunc)

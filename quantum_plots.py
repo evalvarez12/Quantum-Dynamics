@@ -11,7 +11,7 @@ import matplotlib.animation as animation
 import os.path
 
 
-def OneD_animation(sim, x, V='none', psi='real', save=False):
+def animation1D(sim, x, V='none', psi='real', save=False):
     """
     Make an animation of a 1D system.
 
@@ -57,12 +57,12 @@ def OneD_animation(sim, x, V='none', psi='real', save=False):
     plt.show()
 
     if save:
-        _ani_save(ani, sim)
+        _save(ani, sim)
 
     return ani
 
 
-def TwoD_sc(sim, domain, allPoints, potentialFunc, psi="norm", save=False):
+def animation2D(sim, domain, allPoints, potentialFunc, psi="norm", save=False):
     """
     Make a 2D animation of a 2D system.
 
@@ -101,12 +101,12 @@ def TwoD_sc(sim, domain, allPoints, potentialFunc, psi="norm", save=False):
     plt.show()
 
     if save:
-        _ani_save(ani, sim)
+        _save(ani, sim)
 
     return ani
 
 
-def _ani_save(ani, sim):
+def _save(ani, sim):
     """
     Save animation to file. Requires installation of ffmpeg.
 

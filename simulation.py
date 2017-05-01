@@ -32,6 +32,7 @@ class Simulation:
         if dirichletBC:
             self.sign = 1
 
+        self.allPoints = self.numberPoints + self.sign
         H = self._getHamiltonian(np.vectorize(potentialFunc))
         Id = sp.identity((self.numberPoints + self.sign)**self.dim)
 
@@ -39,6 +40,8 @@ class Simulation:
         self.A = (Id + 1j*H*self.dt/2)
         self.B = (Id - 1j*H*self.dt/2)
 
+        # Initialize wavefunction
+        self.psi = np.zeros(self.allPoints**self.dim, dtype=np.complex128)
     def _getHamiltonian(self, potentialFunc):
         """
         Generate the Hamiltonian matrix using the functions
@@ -60,50 +63,62 @@ class Simulation:
                 return matrix.A2Dfull(self.numberPoints, potentialFunc,
                                       self.startPoint, self.domainLength)
 
-    def setPsiPulse(self, energy, center, vel_x=1, vel_y=0, width=.3):
+    def setPsiPulse(self, pulse, energy, center, vel=1, width=.2 ):
         """
         Generate the initial wavefunction as a Gaussian wavepacket. By default
         it moves to the right.
         Inputs:
+            pulse:  (string) plane wave or circular pulse
             energy: (int/float) The waves energy/size.
             center: (float or tuple) Either x or [x,y], for a guassian line
                     profile or 2D gaussian, respectively.
-            vel_x:  Velocity multiplier in the x-direction.
-            vel_y:  Velocity multiplier in the y-direction.
+            vel:    (float or tuple) Velocity v_x or [v_x, v_y], the Velocity
+                    of the pulse
             width:  Standard deviation of the Gaussian wave pulse.
         Output:
             Sets psi of the object to have the desired wave form.
         """
         if self.dim == 1:
+            if pulse == "plane":
+                x = np.linspace(self.startPoint,
+                                self.startPoint + self.domainLength,
+                                self.allPoints)
+                self.pulse = np.exp(1j * vel * np.sqrt(energy) * x) * \
+                              np.exp(-0.5 * (x-center)**2 / width**2)
+            else:
+                self.pulse = np.zeros(allPoints)
 
-            x = np.linspace(self.startPoint,
-                            self.startPoint + self.domainLength,
-                            self.numberPoints + self.sign)
-            self.psi = np.exp(1j * np.sqrt(energy) * x) * \
-                          np.exp(-0.5 * (x-center)**2 / width**2)
 
         if self.dim == 2:
             x = np.linspace(self.startPoint[0],
                             self.startPoint[0] + self.domainLength,
-                            self.numberPoints + self.sign)
+                            self.allPoints)
 
             y = np.linspace(self.startPoint[1],
                             self.startPoint[1] + self.domainLength,
-                            self.numberPoints + self.sign)
+                            self.allPoints)
 
-            if type(center) == int or type(center) == float:
-                # Check to see if center has one argument (2D Line) 
-                psix = np.exp(1j * vel_x * np.sqrt(energy) * x) * \
-                          np.exp(-0.5 * (x-center)**2 / width**2)
-                y = np.ones(self.numberPoints + self.sign)
-                self.psi = np.kron(psix, y)
-            else:
-                # Center has two arguments (2D Gaussian) 
-                psix = np.exp(1j * vel_x * np.sqrt(energy) * x) * \
+            if pulse == "plane":
+                # Check to see if center has one argument (2D Line)
+                psix = np.exp(1j * vel * np.sqrt(energy) * x) * \
+                              np.exp(-0.5 * (x-center)**2 / width**2)
+                y = np.ones(self.allPoints)
+                self.pulse = np.kron(psix, y)
+            if pulse == "circular":
+                # Center has two arguments (2D Gaussian)
+                psix = np.exp(1j * vel[0] * np.sqrt(energy) * x) * \
                           np.exp(-0.5 * (x-center[0])**2 / width**2)
-                psiy = np.exp(1j * vel_y * np.sqrt(energy) * y) * \
+                psiy = np.exp(1j * vel[1] * np.sqrt(energy) * y) * \
                           np.exp(-0.5 * (x-center[1])**2 / width**2)
-                self.psi = np.kron(psix, psiy)
+                self.pulse = np.kron(psix, psiy)
+            else:
+                self.pulse = np.zeros(allPoints**2)
+
+
+        self.psi += self.pulse
+
+    def applyPulse(self):
+        self.psi += self.pulse
 
     def normPsi(self):
         """Return the norm of the wave function."""

@@ -18,7 +18,7 @@ dt = .001
 dirichletBC = False
 startPoint = [0, 0]
 domainLength = 1
-numPulses = 4
+pulseFreq = 100
 
 sign = -1
 if dirichletBC:
@@ -41,21 +41,22 @@ sim = sm.Simulation(dim=dim, potentialFunc=table,
                     dt=dt)
 
 # Create the initial wave function
-Psi = np.zeros((numberPoints + sign)**2)
+# Psi = np.zeros((numberPoints + sign)**2)
 #location = [np.random.choice(x, size = numPulses),
 #            np.random.choice(y.flatten(), size = numPulses)]
-location = np.array([np.random.choice(x, size = numPulses),
-            np.random.choice(y.flatten(), size = numPulses)])
-location = np.swapaxes(location, 0, 1)
-vel = np.random.uniform(low=-1, high=1, size=(2, numPulses))
+# location = np.array([np.random.choice(x, size = numPulses),
+            # np.random.choice(y.flatten(), size = numPulses)])
+# location = np.swapaxes(location, 0, 1)
+vel = np.random.uniform(low=-1, high=1, size=(2, 1))
 
-for i in range(numPulses):
-    sim.setPsiPulse(energy=500, center=location[i], vel_x=vel[0, i],
-                    vel_y=vel[1, i], width=.1)
-    Psi = Psi + sim.psi
-    
-sim.psi = Psi
+# for i in range(numPulses):
+#     sim.setPsiPulse(energy=500, center=location[i], vel_x=vel[0, i],
+#                     vel_y=vel[1, i], width=.1)
+#     Psi = Psi + sim.psi
+
+# sim.psi = Psi
+sim.setPsiPulse(pulse="circular", energy=500, center=[.5, .5], vel=[0, 0], width=.1)
 
 
-ani = qplots.TwoD_sc(sim, [x, y], allPoints, psi="norm",
-                     potentialFunc=table, save=False)
+ani = qplots.animation2D(sim, [x, y], allPoints, psi="norm",
+                         potentialFunc=table, save=False)

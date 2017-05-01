@@ -41,9 +41,9 @@ sim = sm.Simulation(dim=dim, potentialFunc=gaussian,
                     dt=dt)
 
 # Create the initial wave function
-sim.setPsiPulse(energy=500, center=2)
+sim.setPsiPulse(pulse="plane", energy=500, center=2)
 # plt.plot(x, sim.realPsi())
 # plt.show()
 
 
-ani = qplots.OneD_animation(sim, x, psi='real', V=gaussian)
+ani = qplots.animation1D(sim, x, psi='real', V=gaussian)

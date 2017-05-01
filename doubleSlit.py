@@ -48,7 +48,7 @@ sim = sm.Simulation(dim=dim, potentialFunc=doubleSlit,
                     dt=dt)
 
 # Create the initial wave function
-sim.setPsiPulse(energy=500, center=.1, width=.1)
+sim.setPsiPulse(pulse="plane", energy=500, center=.1, width=.1)
 
-ani = qplots.TwoD_sc(sim, [x, y], allPoints, psi="norm",
+ani = qplots.animation2D(sim, [x, y], allPoints, psi="norm",
                      potentialFunc=doubleSlit, save=False)
