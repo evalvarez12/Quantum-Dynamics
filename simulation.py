@@ -88,7 +88,7 @@ class Simulation:
                 self.pulse = np.exp(1j * vel * np.sqrt(energy) * x) * \
                                     np.exp(-0.5 * (x-center)**2 / width**2)
             else:
-                self.pulse = np.zeros(allPoints)
+                self.pulse = np.zeros(self.allPoints)
 
         if self.dim == 2:
             x = np.linspace(self.startPoint[0],
@@ -100,20 +100,18 @@ class Simulation:
                             self.allPoints)
 
             if pulse == "plane":
-                # Check to see if center has one argument (2D Line)
                 psix = np.exp(1j * vel * np.sqrt(energy) * x) * \
                               np.exp(-0.5 * (x-center)**2 / width**2)
                 y = np.ones(self.allPoints)
                 self.pulse = np.kron(psix, y)
             if pulse == "circular":
-                # Center has two arguments (2D Gaussian)
                 psix = np.exp(1j * vel[0] * np.sqrt(energy) * x) * \
                               np.exp(-0.5 * (x-center[0])**2 / width**2)
                 psiy = np.exp(1j * vel[1] * np.sqrt(energy) * y) * \
                               np.exp(-0.5 * (x-center[1])**2 / width**2)
                 self.pulse = np.kron(psix, psiy)
             else:
-                self.pulse = np.zeros(allPoints**2)
+                self.pulse = np.zeros(self.allPoints**2)
 
         self.psi += self.pulse/np.linalg.norm(self.pulse)
 
