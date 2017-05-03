@@ -1,4 +1,5 @@
 """
+dispersion.py
 Simulation of Rutherford dispersion.
 
 Created on: 28-04-2017.

@@ -1,4 +1,5 @@
 """
+billiards.py
 Simulation of multiple wave packets with random starting positions and
 velocities.
 

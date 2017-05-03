@@ -1,4 +1,5 @@
 """
+doubleSlit.py
 Simulation of the double slit experiment.
 
 Created on: 28-04-2017.

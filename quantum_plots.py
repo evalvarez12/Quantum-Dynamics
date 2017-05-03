@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 """
+quantum_plots.py
 Hold all the methods for plotting and saving animations.
 
 Created on Tue Apr 25 00:38:00 2017

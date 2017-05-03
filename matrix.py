@@ -1,4 +1,5 @@
 """
+matrix.py
 Definition of the matrices that discretize the Hamiltonians in 1 and
 2 dimensions.
 

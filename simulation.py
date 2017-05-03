@@ -1,4 +1,5 @@
 """
+simulation.py
 Class that performs the evolution of the system.
 
 created on: 24-04-2017.
@@ -141,3 +142,11 @@ class Simulation:
             self.psi = self.psi/np.linalg.norm(self.psi)
         self.psi = sp.linalg.spsolve(self.A, self.B.dot(self.psi),
                                      permc_spec='NATURAL')
+
+    def consistencyCheck(self):
+        """Check if system is consisten by summing probabilities"""
+        P = np.sum(self.normPsi())
+        if abs(P-1) < .001:
+            return True
+        else:
+            return False

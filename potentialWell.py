@@ -1,4 +1,5 @@
 """
+potentilWell.py
 A simple animation for the 1D case
 with potential well.
 
