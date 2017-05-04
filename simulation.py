@@ -44,6 +44,7 @@ class Simulation:
 
         # Initialize wavefunction
         self.psi = np.zeros(self.allPoints**self.dim, dtype=np.complex128)
+        self.pulse = np.zeros(self.allPoints**self.dim, dtype=np.complex128)
 
     def _getHamiltonian(self, potentialFunc):
         """
@@ -73,7 +74,7 @@ class Simulation:
         Inputs:
             pulse:  (string) plane wave or circular pulse
             energy: (int/float) The waves energy/size.
-            center: (float or tuple) Either x or [x,y], for a guassian line
+            center: (float or tuple) Either x or [x, y], for a guassian line
                     profile or 2D gaussian, respectively.
             vel:    (float or tuple) Velocity v_x or [v_x, v_y], the Velocity
                     of the pulse
@@ -105,11 +106,11 @@ class Simulation:
                               np.exp(-0.5 * (x-center)**2 / width**2)
                 y = np.ones(self.allPoints)
                 self.pulse = np.kron(psix, y)
-            if pulse == "circular":
+            elif pulse == "circular":
                 psix = np.exp(1j * vel[0] * np.sqrt(energy) * x) * \
                               np.exp(-0.5 * (x-center[0])**2 / width**2)
                 psiy = np.exp(1j * vel[1] * np.sqrt(energy) * y) * \
-                              np.exp(-0.5 * (x-center[1])**2 / width**2)
+                              np.exp(-0.5 * (y-center[1])**2 / width**2)
                 self.pulse = np.kron(psix, psiy)
             else:
                 self.pulse = np.zeros(self.allPoints**2)
