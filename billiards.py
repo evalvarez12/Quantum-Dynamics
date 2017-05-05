@@ -10,6 +10,7 @@ Created on: 28-04-2017.
 import numpy as np
 import simulation as sm
 import quantum_plots as qplots
+import matplotlib.pyplot as plt
 
 
 # Define the system parameters
@@ -63,3 +64,4 @@ for i in range(30):
     sim.evolve()
 
 ani = qplots.animation2D(sim, psi="norm", potentialFunc=dispersionVis, save=False)
+plt.show()

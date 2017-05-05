@@ -9,6 +9,7 @@ Created on: 28-04-2017.
 import numpy as np
 import simulation as sm
 import quantum_plots as qplots
+import matplotlib.pyplot as plt
 
 
 # Define the system parameters
@@ -44,3 +45,4 @@ sim.setPsiPulse(pulse="plane", energy=500, center=.1, width=.1)
 
 ani = qplots.animation2D(sim, psi="norm",
                      potentialFunc=doubleSlit, save=False)
+plt.show()

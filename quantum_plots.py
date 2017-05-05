@@ -11,7 +11,7 @@ import matplotlib.animation as animation
 import os.path
 
 
-def animation1D(sim, V='none', psi='real', save=False):
+def animation1D(sim, V='none', psi='real', time=100, save=False):
     """
     Make an animation of a 1D system.
 
@@ -47,15 +47,13 @@ def animation1D(sim, V='none', psi='real', save=False):
             line.set_ydata(sim.normPsi())
         return line,
 
-    ani = animation.FuncAnimation(fig, animate, frames=100, interval=20, blit=True)
+    ani = animation.FuncAnimation(fig, animate, frames=time, interval=20, blit=True)
 
     if V != 'none':
         ax2 = ax1.twinx()
-        ax2.plot(x, V(x), 'r')
+        ax2.plot(x, np.vectorize(V)(x), 'r')
         ax2.set_ylabel('$V(x)$')
         ax2.tick_params('y', colors='r')
-
-    plt.show()
 
     if save:
         _save(ani, sim)
@@ -63,7 +61,7 @@ def animation1D(sim, V='none', psi='real', save=False):
     return ani
 
 
-def animation2D(sim, potentialFunc, psi="norm", save=False):
+def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
     """
     Make a 2D animation of a 2D system.
 
@@ -79,13 +77,13 @@ def animation2D(sim, potentialFunc, psi="norm", save=False):
     """
     domain = sim.domain()
     allPoints = sim.size()
-    pot_data = np.vectorize(potentialFunc)(domain[0], domain[1])
+    potentialPlot = np.vectorize(potentialFunc)(domain[0], domain[1])
 
     fig = plt.figure()
     im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
                     animated=True, cmap=plt.get_cmap('jet'), alpha=.9,
                     origin='lower')
-    plt.imshow(pot_data, cmap=plt.get_cmap('Greys'), alpha=1, origin='lower')
+    plt.imshow(potentialPlot, cmap=plt.get_cmap('Greys'), alpha=1, origin='lower')
 
     def animate(i):
         sim.evolve()
@@ -98,10 +96,8 @@ def animation2D(sim, potentialFunc, psi="norm", save=False):
 
         return im,
 
-    ani = animation.FuncAnimation(fig, animate, frames=600,
-                                  interval=10, blit=True)
-
-    plt.show()
+    ani = animation.FuncAnimation(fig, animate, frames=100, interval=20,
+                                  blit=True)
 
     if save:
         _save(ani, sim)

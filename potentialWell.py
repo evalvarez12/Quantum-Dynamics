@@ -10,6 +10,7 @@ import quantum_plots as qplots
 
 import numpy as np
 import simulation as sm
+import matplotlib.pyplot as plt
 
 
 # Define the system parameters
@@ -51,3 +52,4 @@ sim.setPsiPulse(pulse="plane", energy=500, center=2)
 
 
 ani = qplots.animation1D(sim, psi='real', V=potentialFunc)
+plt.show()
