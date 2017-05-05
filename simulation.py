@@ -87,34 +87,35 @@ class Simulation:
                 x = self.domain()
                 self.pulse = np.exp(1j * vel * np.sqrt(energy) * x) * \
                                     np.exp(-0.5 * (x-center)**2 / width**2)
-                normConst = np.linalg.norm(self.pulse)
+                norm_Const = np.linalg.norm(self.pulse)
             else:
                 self.pulse = np.zeros(self.allPoints)
                 # Otherwise would divide by zero
-                normConst = 1
-
-        if self.dim == 2:
+                norm_Const = 1
+        elif self.dim == 2:
             [x, y] = self.domain()
 
             if pulse == "plane":
                 psix = np.exp(1j * vel * np.sqrt(energy) * x) * \
                               np.exp(-0.5 * (x-center)**2 / width**2)
-                y = np.ones(self.allPoints)
-                self.pulse = np.kron(psix, y)
-                normConst = np.linalg.norm(self.pulse)
+                              
+                y_const = np.ones(self.allPoints)
+                self.pulse = np.kron(psix, y_const.flatten())
+                norm_Const = np.linalg.norm(self.pulse)
             elif pulse == "circular":
                 psix = np.exp(1j * vel[0] * np.sqrt(energy) * x) * \
                               np.exp(-0.5 * (x-center[0])**2 / width**2)
                 psiy = np.exp(1j * vel[1] * np.sqrt(energy) * y) * \
                               np.exp(-0.5 * (y-center[1])**2 / width**2)
-                self.pulse = np.kron(psix, psiy)
-                normConst = np.linalg.norm(self.pulse)
+                              
+                self.pulse = np.kron(psix, psiy.flatten())
+                norm_Const = np.linalg.norm(self.pulse)
             else:
                 self.pulse = np.zeros(self.allPoints**2)
                 # Otherwise would divide by zero
-                normConst = 1
+                norm_Const = 1
 
-        self.psi += self.pulse/normConst
+        self.psi += self.pulse/norm_Const
 
     def normPsi(self):
         """Return the norm of the wave function."""
@@ -156,13 +157,12 @@ class Simulation:
                             self.allPoints)
             return x
         elif self.dim == 2:
-            x = np.linspace(self.startPoint[0], 
+            x = np.linspace(self.startPoint[0],
                             self.startPoint[0] + self.domainLength,
                             self.allPoints)
-            y = np.linspace(self.startPoint[1], 
+            y = np.linspace(self.startPoint[1],
                             self.startPoint[1] + self.domainLength,
                             self.allPoints).reshape(-1, 1)
             return [x, y]
         else:
             return 0
-
