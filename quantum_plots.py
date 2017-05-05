@@ -46,7 +46,7 @@ def animation1D(sim, x, V='none', psi='real', save=False):
             line.set_ydata(sim.normPsi())
         return line,
 
-    ani = animation.FuncAnimation(fig, animate, frames=600, interval=10)
+    ani = animation.FuncAnimation(fig, animate, frames=100, interval=20, blit=True)
 
     if V != 'none':
         ax2 = ax1.twinx()
