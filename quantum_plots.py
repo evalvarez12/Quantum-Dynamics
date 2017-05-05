@@ -47,7 +47,8 @@ def animation1D(sim, V='none', psi='real', time=100, save=False):
             line.set_ydata(sim.normPsi())
         return line,
 
-    ani = animation.FuncAnimation(fig, animate, frames=time, interval=20, blit=True)
+    ani = animation.FuncAnimation(fig, animate, frames=time, interval=20,
+                                  blit=True)
 
     if V != 'none':
         ax2 = ax1.twinx()
@@ -61,7 +62,8 @@ def animation1D(sim, V='none', psi='real', time=100, save=False):
     return ani
 
 
-def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
+def animation2D(sim, potentialFunc, psi="norm", time=100, save=False,
+                is_local=True):
     """
     Make a 2D animation of a 2D system.
 
@@ -83,7 +85,11 @@ def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
     im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
                     animated=True, cmap=plt.get_cmap('jet'), alpha=.9,
                     origin='lower')
-    plt.imshow(potentialPlot, cmap=plt.get_cmap('Greys'), alpha=1, origin='lower')
+    
+    if is_local:
+        # Only plot the potential if running locally, not in notebook.
+        plt.imshow(potentialPlot, cmap=plt.get_cmap('Greys'), alpha=1,
+                   origin='lower')
 
     def animate(i):
         sim.evolve()
@@ -96,7 +102,7 @@ def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
 
         return im,
 
-    ani = animation.FuncAnimation(fig, animate, frames=100, interval=20,
+    ani = animation.FuncAnimation(fig, animate, frames=time, interval=20,
                                   blit=True)
 
     if save:
