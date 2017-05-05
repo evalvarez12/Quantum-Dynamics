@@ -22,6 +22,7 @@ def animation1D(sim, V='none', psi='real', time=100, save=False):
             indicate it should not be plotted.
         psi: (string) "real" or "norm" to determine whether to plot
             Re(Ψ) or |Ψ|^2
+        time: (int) Number of frames to animate.
         save: (Boolean) Whether the animation should be saved.
     Outputs:
         Displays animation with both the evolving wavefunction norm and the
@@ -62,16 +63,17 @@ def animation1D(sim, V='none', psi='real', time=100, save=False):
     return ani
 
 
-def animation2D(sim, potentialFunc, psi="norm", time=100, save=False,
-                is_local=True):
+def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
     """
     Make a 2D animation of a 2D system.
 
     Inputs:
         sim: (simulation object) An object of the simulation class.
+        potentialFunc: (vectorised function) The potential function, or 
+            "none", to indicate it should not be plotted.
         psi: (string) "real" or "norm" to determine whether to plot
             Re(Ψ) or |Ψ|^2
-        allPoints:
+        time: (int) Number of frames to animate.
         save: (Boolean) Whether the animation should be saved.
     Outputs:
         Displays animation with both the evolving wavefunction norm and the
@@ -86,7 +88,7 @@ def animation2D(sim, potentialFunc, psi="norm", time=100, save=False,
                     animated=True, cmap=plt.get_cmap('jet'), alpha=.9,
                     origin='lower')
     
-    if is_local:
+    if potentialFunc != 'none':
         # Only plot the potential if running locally, not in notebook.
         plt.imshow(potentialPlot, cmap=plt.get_cmap('Greys'), alpha=1,
                    origin='lower')
