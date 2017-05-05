@@ -1,5 +1,4 @@
 """
-dispersion.py
 Simulation of Rutherford dispersion.
 
 Created on: 28-04-2017.
@@ -12,7 +11,7 @@ import quantum_plots as qplots
 import matplotlib.pyplot as plt
 
 
-# Define the system parameters
+# Define the system parameters and domain
 dim = 2
 numberPoints = 100
 dt = .001
@@ -26,14 +25,15 @@ if dirichletBC:
 allPoints = numberPoints + sign
 
 
-
 def dispersion(x, y):
+    '''1/r^2 Dispersive force around a defined center '''
     center = [0.8, 1.]
     r = np.linalg.norm([x - center[0], y - center[1]])
     return 10./r**2
 
 
 def dispersionVis(x, y):
+    '''An exaggereted potential function to make it more visisble'''
     center = [0.8, 1.]
     r = np.linalg.norm([x - center[0], y - center[1]])
     return 10./((r + 1)**2)
@@ -48,7 +48,7 @@ sim = sm.Simulation(dim=dim, potentialFunc=dispersion,
 # Create the initial wave function
 sim.setPsiPulse(pulse="plane", energy=500, vel=1, center=.1, width=.1)
 
-
+# System evolution and Animation
 ani = qplots.animation2D(sim, psi="norm",
-                     potentialFunc=dispersionVis, save=False)
+                         potentialFunc=dispersionVis, save=False)
 plt.show()

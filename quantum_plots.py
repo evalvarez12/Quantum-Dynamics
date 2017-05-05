@@ -1,5 +1,4 @@
 """
-quantum_plots.py
 Hold all the methods for plotting and saving animations.
 
 Created on Tue Apr 25 00:38:00 2017
@@ -69,7 +68,7 @@ def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
 
     Inputs:
         sim: (simulation object) An object of the simulation class.
-        potentialFunc: (vectorised function) The potential function, or 
+        potentialFunc: (vectorised function) The potential function, or
             "none", to indicate it should not be plotted.
         psi: (string) "real" or "norm" to determine whether to plot
             Re(Ψ) or |Ψ|^2
@@ -80,16 +79,16 @@ def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
             potential function influencing it.
     """
     domain = sim.domain()
-    allPoints = sim.size()
-    potentialPlot = np.vectorize(potentialFunc)(domain[0], domain[1])
+    allPoints = sim.allPoints
 
     fig = plt.figure()
     im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
                     animated=True, cmap=plt.get_cmap('jet'), alpha=.9,
                     origin='lower')
-    
+
     if potentialFunc != 'none':
         # Only plot the potential if running locally, not in notebook.
+        potentialPlot = np.vectorize(potentialFunc)(domain[0], domain[1])
         plt.imshow(potentialPlot, cmap=plt.get_cmap('Greys'), alpha=1,
                    origin='lower')
 

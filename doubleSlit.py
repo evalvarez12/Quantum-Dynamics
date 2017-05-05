@@ -1,5 +1,4 @@
 """
-doubleSlit.py
 Simulation of the double slit experiment.
 
 Created on: 28-04-2017.
@@ -12,7 +11,7 @@ import quantum_plots as qplots
 import matplotlib.pyplot as plt
 
 
-# Define the system parameters
+# Define the system parameters and domain
 dim = 2
 numberPoints = 100
 dt = .001
@@ -22,6 +21,7 @@ domainLength = 2
 
 
 def doubleSlit(x, y):
+    '''A potential wall with two identical apertures'''
     sS = .3   # Slit separation
     sW = .1   # Half slit width
     spX = .5  # X coordinate start
@@ -43,6 +43,7 @@ sim = sm.Simulation(dim=dim, potentialFunc=doubleSlit,
 # Create the initial wave function
 sim.setPsiPulse(pulse="plane", energy=500, center=.1, width=.1)
 
+# System evolution and Animation
 ani = qplots.animation2D(sim, psi="norm",
-                     potentialFunc=doubleSlit, save=False)
+                         potentialFunc=doubleSlit, save=False)
 plt.show()

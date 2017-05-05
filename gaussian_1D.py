@@ -1,5 +1,4 @@
 """
-gaussian_1D.py
 A simple animation for the 1D case
 with potential well.
 
@@ -13,7 +12,7 @@ import simulation as sm
 import matplotlib.pyplot as plt
 
 
-# Define the system parameters
+# Define the system parameters and domain
 dim = 1
 numberPoints = 256
 dt = .001
@@ -23,6 +22,7 @@ domainLength = 15
 
 
 def gaussian(x):
+    '''A 1D Gaussian potential function'''
     mag = 200
     center = 4
     std = 1
@@ -38,9 +38,7 @@ sim = sm.Simulation(dim=dim, potentialFunc=gaussian,
 
 # Create the initial wave function
 sim.setPsiPulse(pulse="plane", energy=500, center=2)
-# plt.plot(x, sim.realPsi())
-# plt.show()
 
-
+# System evolution and Animation
 ani = qplots.animation1D(sim, psi='real', V=gaussian)
 plt.show()

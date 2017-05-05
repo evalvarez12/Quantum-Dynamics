@@ -1,5 +1,4 @@
 """
-billiards.py
 Simulation of multiple wave packets with random starting positions and
 velocities.
 
@@ -13,7 +12,7 @@ import quantum_plots as qplots
 import matplotlib.pyplot as plt
 
 
-# Define the system parameters
+# Define the system parameters and domain
 dim = 2
 numberPoints = 100
 dt = .001
@@ -22,11 +21,11 @@ startPoint = [0, 0]
 domainLength = 1
 
 
-
 def dispersion(x, y):
     center = [0.5, 0.5]
     r = np.linalg.norm([x - center[0], y - center[1]])
     return 15./r**2
+
 
 def dispersionVis(x, y):
     center = [0.5, 0.5]
@@ -58,10 +57,13 @@ vel = np.random.uniform(low=-1, high=1, size=(2, 1))
 #     Psi = Psi + sim.psi
 
 # sim.psi = Psi
-sim.setPsiPulse(pulse="circular", energy=500, center=[.2, .5], vel=[.4, .8], width=.1)
+sim.setPsiPulse(pulse="circular", energy=500, center=[.2, .5], vel=[.4, .8],
+                width=.1)
 
 for i in range(30):
     sim.evolve()
 
-ani = qplots.animation2D(sim, psi="norm", potentialFunc=dispersionVis, save=False)
+# System evolution and Animation
+ani = qplots.animation2D(sim, psi="norm", potentialFunc=dispersionVis,
+                         save=False)
 plt.show()

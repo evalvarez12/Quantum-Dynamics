@@ -22,7 +22,7 @@ class Simulation:
 
     def __init__(self, dim, potentialFunc, dirichletBC, numberPoints,
                  startPoint, domainLength, dt):
-        """Intilialize the object."""
+        """Intilializes the object."""
         self.dim = dim
         self.numberPoints = numberPoints
         self.startPoint = startPoint
@@ -84,41 +84,37 @@ class Simulation:
         """
         if self.dim == 1:
             if pulse == "plane":
-                x = np.linspace(self.startPoint,
-                                self.startPoint + self.domainLength,
-                                self.allPoints)
+                x = self.domain()
                 self.pulse = np.exp(1j * vel * np.sqrt(energy) * x) * \
                                     np.exp(-0.5 * (x-center)**2 / width**2)
+                normConst = np.linalg.norm(self.pulse)
             else:
                 self.pulse = np.zeros(self.allPoints)
+                # Otherwise would divide by zero
+                normConst = 1
 
         if self.dim == 2:
-            x = np.linspace(self.startPoint[0],
-                            self.startPoint[0] + self.domainLength,
-                            self.allPoints)
-
-            y = np.linspace(self.startPoint[1],
-                            self.startPoint[1] + self.domainLength,
-                            self.allPoints)
+            [x, y] = self.domain()
 
             if pulse == "plane":
                 psix = np.exp(1j * vel * np.sqrt(energy) * x) * \
                               np.exp(-0.5 * (x-center)**2 / width**2)
                 y = np.ones(self.allPoints)
                 self.pulse = np.kron(psix, y)
+                normConst = np.linalg.norm(self.pulse)
             elif pulse == "circular":
                 psix = np.exp(1j * vel[0] * np.sqrt(energy) * x) * \
                               np.exp(-0.5 * (x-center[0])**2 / width**2)
                 psiy = np.exp(1j * vel[1] * np.sqrt(energy) * y) * \
                               np.exp(-0.5 * (y-center[1])**2 / width**2)
                 self.pulse = np.kron(psix, psiy)
+                normConst = np.linalg.norm(self.pulse)
             else:
                 self.pulse = np.zeros(self.allPoints**2)
+                # Otherwise would divide by zero
+                normConst = 1
 
-        self.psi += self.pulse/np.linalg.norm(self.pulse)
-
-    def applyPulse(self):
-        self.psi += self.pulse
+        self.psi += self.pulse/normConst
 
     def normPsi(self):
         """Return the norm of the wave function."""
@@ -145,7 +141,7 @@ class Simulation:
                                      permc_spec='NATURAL')
 
     def consistencyCheck(self):
-        """Check if system is consisten by summing probabilities"""
+        """Check if system is consistent by summing probabilities"""
         P = np.sum(self.normPsi())
         if abs(P-1) < .001:
             return True
@@ -153,21 +149,20 @@ class Simulation:
             return False
 
     def domain(self):
+        '''Generates evenly spaced vectors spanning the x and y domains'''
         if self.dim == 1:
             x = np.linspace(self.startPoint,
                             self.startPoint + self.domainLength,
                             self.allPoints)
             return x
-
-        if self.dim == 2:
-            x = np.linspace(self.startPoint[0], self.startPoint[0] + self.domainLength,
+        elif self.dim == 2:
+            x = np.linspace(self.startPoint[0], 
+                            self.startPoint[0] + self.domainLength,
                             self.allPoints)
-            y = np.linspace(self.startPoint[1], self.startPoint[1] + self.domainLength,
+            y = np.linspace(self.startPoint[1], 
+                            self.startPoint[1] + self.domainLength,
                             self.allPoints).reshape(-1, 1)
             return [x, y]
-
         else:
             return 0
 
-    def size(self):
-        return self.allPoints
