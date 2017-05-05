@@ -11,7 +11,7 @@ import matplotlib.animation as animation
 import os.path
 
 
-def animation1D(sim, x, V='none', psi='real', save=False):
+def animation1D(sim, V='none', psi='real', save=False):
     """
     Make an animation of a 1D system.
 
@@ -28,6 +28,7 @@ def animation1D(sim, x, V='none', psi='real', save=False):
             potential function influencing it.
     """
     # Animation stuff
+    x = sim.domain()
     fig, ax1 = plt.subplots()
     if psi == 'real':
         ax1.set_ylabel('$Re(\psi(x))$')
@@ -62,7 +63,7 @@ def animation1D(sim, x, V='none', psi='real', save=False):
     return ani
 
 
-def animation2D(sim, domain, allPoints, potentialFunc, psi="norm", save=False):
+def animation2D(sim, potentialFunc, psi="norm", save=False):
     """
     Make a 2D animation of a 2D system.
 
@@ -76,6 +77,8 @@ def animation2D(sim, domain, allPoints, potentialFunc, psi="norm", save=False):
         Displays animation with both the evolving wavefunction norm and the
             potential function influencing it.
     """
+    domain = sim.domain()
+    allPoints = sim.size()
     pot_data = np.vectorize(potentialFunc)(domain[0], domain[1])
 
     fig = plt.figure()

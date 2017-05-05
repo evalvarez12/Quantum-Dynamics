@@ -24,7 +24,6 @@ sign = -1
 if dirichletBC:
     sign = 1
 
-x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
 
 
 def potentialWell(x):
@@ -51,4 +50,4 @@ sim.setPsiPulse(pulse="plane", energy=500, center=2)
 # plt.show()
 
 
-ani = qplots.animation1D(sim, x, psi='real', V=potentialFunc)
+ani = qplots.animation1D(sim, psi='real', V=potentialFunc)

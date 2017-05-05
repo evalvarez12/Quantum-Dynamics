@@ -20,12 +20,6 @@ dirichletBC = False
 startPoint = 0
 domainLength = 15
 
-sign = -1
-if dirichletBC:
-    sign = 1
-
-x = np.linspace(startPoint, startPoint + domainLength, numberPoints + sign)
-
 
 def gaussian(x):
     mag = 200
@@ -47,4 +41,4 @@ sim.setPsiPulse(pulse="plane", energy=500, center=2)
 # plt.show()
 
 
-ani = qplots.animation1D(sim, x, psi='real', V=gaussian)
+ani = qplots.animation1D(sim, psi='real', V=gaussian)

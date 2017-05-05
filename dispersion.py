@@ -24,9 +24,6 @@ if dirichletBC:
     sign = 1
 allPoints = numberPoints + sign
 
-x = np.linspace(startPoint[0], startPoint[0] + domainLength, allPoints)
-y = np.linspace(startPoint[1], startPoint[1] + domainLength,
-                allPoints).reshape(-1, 1)
 
 
 def dispersion(x, y):
@@ -51,5 +48,5 @@ sim = sm.Simulation(dim=dim, potentialFunc=dispersion,
 sim.setPsiPulse(pulse="plane", energy=500, vel=1, center=.1, width=.1)
 
 
-ani = qplots.animation2D(sim, [x, y], allPoints, psi="norm",
+ani = qplots.animation2D(sim, psi="norm",
                      potentialFunc=dispersionVis, save=False)

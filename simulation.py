@@ -151,3 +151,23 @@ class Simulation:
             return True
         else:
             return False
+
+    def domain(self):
+        if self.dim == 1:
+            x = np.linspace(self.startPoint,
+                            self.startPoint + self.domainLength,
+                            self.allPoints)
+            return x
+
+        if self.dim == 2:
+            x = np.linspace(self.startPoint[0], self.startPoint[0] + self.domainLength,
+                            self.allPoints)
+            y = np.linspace(self.startPoint[1], self.startPoint[1] + self.domainLength,
+                            self.allPoints).reshape(-1, 1)
+            return [x, y]
+
+        else:
+            return 0
+
+    def size(self):
+        return self.allPoints
