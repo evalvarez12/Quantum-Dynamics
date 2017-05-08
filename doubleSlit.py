@@ -22,8 +22,8 @@ domainLength = 2
 
 def doubleSlit(x, y):
     '''A potential wall with two identical apertures'''
-    sS = .3   # Slit separation
-    sW = .1   # Half slit width
+    sS = .45   # Slit separation
+    sW = .15   # Half slit width
     spX = .5  # X coordinate start
     spY = 1   # Y coordinate of center of slits
     if x > spX and x < spX+.05 and (y < spY-sS/2. or y > spY+sS/2.):
@@ -41,7 +41,7 @@ sim = sm.Simulation(dim=dim, potentialFunc=doubleSlit,
                     dt=dt)
 
 # Create the initial wave function
-sim.setPsiPulse(pulse="plane", energy=500, center=.1, width=.1)
+sim.setPsiPulse(pulse="circular", energy=500, center=.1, width=.1)
 
 # System evolution and Animation
 ani = qplots.animation2D(sim, psi="norm",
