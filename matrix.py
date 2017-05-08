@@ -114,19 +114,11 @@ def _Ih(numberPoints):
     return sp.diags(Id)
 
 
-def _Th(numberPoints, potentialFunc, domainStart, domainLength):
+def _Th(numberPoints, domainLength):
     """Create a section of the matrix A."""
     h = domainLength/numberPoints
 
-    o = np.ones(numberPoints+1)
-    x = np.linspace(domainStart[0], domainStart[0] + domainLength,
-                    numberPoints+1)
-    y = np.linspace(domainStart[1], domainStart[1] + domainLength,
-                    numberPoints+1)
-    x = np.kron(x, o)
-    y = np.kron(o, y)
-    v = potentialFunc(x, y)
-    a = np.ones(numberPoints+1)*(4. + h**2 * v)
+    a = np.ones(numberPoints+1)*4.
     b = np.ones(numberPoints)*(-1)
 
     a[0] = h**2
@@ -157,10 +149,19 @@ def A2Dfull(numberPoints, potentialFunc, domainStart, domainLength):
     Center3 = sp.diags(b, -1)
     Bounds = sp.diags(b2, 0)
 
-    T = _Th(numberPoints, potentialFunc, domainStart, domainLength)
+    T = _Th(numberPoints, domainLength)
     Id = _Ih(numberPoints)
     I_N = (h**2)*sp.identity(numberPoints+1)
 
+    o = np.ones(numberPoints+1)
+    x = np.linspace(domainStart[0], domainStart[0] + domainLength,
+                    numberPoints+1)
+    y = np.linspace(domainStart[1], domainStart[1] + domainLength,
+                    numberPoints+1)
+    x = np.kron(x, o)
+    y = np.kron(o, y)
+    v = potentialFunc(x, y)
+
     A = sp.kron(Center1, T) + sp.kron(Center2, Id) + sp.kron(Center3, Id) \
-      + sp.kron(Bounds, I_N)
+      + sp.kron(Bounds, I_N) + (h**2 * sp.diags(v, 0))
     return (1./h**2)*A
