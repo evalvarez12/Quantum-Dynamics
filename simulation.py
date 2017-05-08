@@ -98,7 +98,7 @@ class Simulation:
             if pulse == "plane":
                 psix = np.exp(1j * vel * np.sqrt(energy) * x) * \
                               np.exp(-0.5 * (x-center)**2 / width**2)
-                              
+
                 y_const = np.ones(self.allPoints)
                 self.pulse = np.kron(psix, y_const.flatten())
                 norm_Const = np.linalg.norm(self.pulse)
@@ -107,7 +107,7 @@ class Simulation:
                               np.exp(-0.5 * (x-center[0])**2 / width**2)
                 psiy = np.exp(1j * vel[1] * np.sqrt(energy) * y) * \
                               np.exp(-0.5 * (y-center[1])**2 / width**2)
-                              
+
                 self.pulse = np.kron(psix, psiy.flatten())
                 norm_Const = np.linalg.norm(self.pulse)
             else:
@@ -148,21 +148,22 @@ class Simulation:
             return True
         else:
             return False
-        
+
     def probability(self, time):
         '''
         Evolves the system, measures the probability at each instant and plots
             it.
         Input:
             time: (int) iterations to run
+        Output:
+            P: (vector, length=time) Probability at each time
         '''
         P = np.zeros(time)
         for i in range(time):
             self.evolve()
             P[i] = np.sum(self.normPsi())
-            
+
         return P
-        
 
     def domain(self):
         '''Generates evenly spaced vectors spanning the x and y domains'''

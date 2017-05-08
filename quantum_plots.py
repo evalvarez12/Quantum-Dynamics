@@ -119,12 +119,12 @@ def probabilityGraph(P):
     fig, ax = plt.subplots()
     ax.set_ylabel("$\Sigma (\psi(x) \psi(x)')$")
     ax.set_xlabel('t')
-    ax.set_title('Probability evolution')
-    
+    ax.set_title('Probability Evolution')
+
     plt.plot(P)
-    
+
     plt.show
-    
+    return fig
 
 
 def _save(ani, sim):
