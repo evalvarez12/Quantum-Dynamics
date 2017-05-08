@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 # Define the system parameters and domain
 dim = 2
-numberPoints = 100
+numberPoints = 200
 dt = .001
 dirichletBC = False
 startPoint = [0, 0]
@@ -22,15 +22,16 @@ domainLength = 2
 
 def doubleSlit(x, y):
     '''A potential wall with two identical apertures'''
-    sS = .5   # Slit separation
-    sW = .1  #  Slits width
-    spX = 1 # X coordinate start
+    sS = .4 # Slit separation
+    sW = .06  #  Slits width
+    spX = .5 # X coordinate start
     spY = 1   # Y coordinate of center of slits
     bW = 0.03 # Barrier width
+    mag = 20000   # Barrier potential
     if x > spX and x < spX+bW and (y < spY-sS/2. or y > spY+sS/2.):
-        return 50000
+        return mag
     if x > spX and x < spX+bW and (y > spY-sS/2.+sW and y < spY+sS/2.-sW):
-        return 50000
+        return mag
     else:
         return 0
 
@@ -42,7 +43,7 @@ sim = sm.Simulation(dim=dim, potentialFunc=doubleSlit,
                     dt=dt)
 
 # Create the initial wave function
-sim.setPsiPulse(pulse="circular", energy=500, center=[.1, 1],vel=[1, 0], width=.3)
+sim.setPsiPulse(pulse="circular", energy=1000, center=[.1, 1],vel=[2, 0], width=.3)
 
 # System evolution and Animation
 ani = qplots.animation2D(sim, psi="norm",
