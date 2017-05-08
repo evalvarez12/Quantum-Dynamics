@@ -112,6 +112,21 @@ def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
     return ani
 
 
+def probabilityGraph(P):
+    '''
+    Plots probability over time
+    '''
+    fig, ax = plt.subplots()
+    ax.set_ylabel("$\Sigma (\psi(x) \psi(x)')$")
+    ax.set_xlabel('t')
+    ax.set_title('Probability evolution')
+    
+    plt.plot(P)
+    
+    plt.show
+    
+
+
 def _save(ani, sim):
     """
     Save animation to file. Requires installation of ffmpeg.

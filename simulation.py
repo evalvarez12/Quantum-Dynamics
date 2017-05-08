@@ -148,6 +148,21 @@ class Simulation:
             return True
         else:
             return False
+        
+    def probability(self, time):
+        '''
+        Evolves the system, measures the probability at each instant and plots
+            it.
+        Input:
+            time: (int) iterations to run
+        '''
+        P = np.zeros(time)
+        for i in range(time):
+            self.evolve()
+            P[i] = np.sum(self.normPsi())
+            
+        return P
+        
 
     def domain(self):
         '''Generates evenly spaced vectors spanning the x and y domains'''
