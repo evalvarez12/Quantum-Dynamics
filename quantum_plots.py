@@ -146,6 +146,19 @@ def frame2D(sim, potentialFunc, psi="norm"):
         plt.imshow(potentialPlot, cmap=plt.get_cmap('Greys'), alpha=1,
                    origin='lower')
 
+def probabilityGraph(P):
+    '''
+    Plots probability over time
+    '''
+    fig, ax = plt.subplots()
+    ax.set_ylabel("$\Sigma (\psi(x) \psi(x)')$")
+    ax.set_xlabel('t')
+    ax.set_title('Probability Evolution')
+
+    plt.plot(P)
+
+    plt.show
+    return fig
 
 
 def _save(ani, sim):

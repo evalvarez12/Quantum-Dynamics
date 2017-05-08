@@ -29,14 +29,14 @@ def dispersion(x, y):
     '''1/r^2 Dispersive force around a defined center '''
     center = [0.8, 1.]
     r = np.linalg.norm([x - center[0], y - center[1]])
-    return 10./r**2
+    return 1./r**2
 
 
 def dispersionVis(x, y):
     '''An exaggereted potential function to make it more visisble'''
     center = [0.8, 1.]
     r = np.linalg.norm([x - center[0], y - center[1]])
-    return 10./((r + 1)**2)
+    return 10./((r)**2)
 
 
 # Create the simulation for the system
@@ -46,7 +46,7 @@ sim = sm.Simulation(dim=dim, potentialFunc=dispersion,
                     dt=dt)
 
 # Create the initial wave function
-sim.setPsiPulse(pulse="plane", energy=500, vel=1, center=.1, width=.1)
+sim.setPsiPulse(pulse="circular", energy=1000, vel=[1, 0], center=[.1, 1], width=.1)
 
 # System evolution and Animation
 ani = qplots.animation2D(sim, psi="norm",
