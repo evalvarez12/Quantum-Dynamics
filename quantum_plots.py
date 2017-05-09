@@ -85,19 +85,21 @@ def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
     im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
                     animated=True, cmap=plt.get_cmap('jet'), alpha=.9,
                     origin='lower')
-    plt.xticks([])
-    plt.yticks([])
-    plt.xlabel(r'$x$', fontsize=18)
-    plt.ylabel(r'$y$', fontsize=18)
+
     if potentialFunc != 'none':
         # Only plot the potential if running locally, not in notebook.
         potentialPlot = np.vectorize(potentialFunc)(domain[0], domain[1])
         plt.imshow(potentialPlot, cmap=plt.get_cmap('Greys'), alpha=1,
                    origin='lower')
 
+    plt.xticks([])
+    plt.yticks([])
+    plt.xlabel(r'$x$', fontsize=18)
+    plt.ylabel(r'$y$', fontsize=18)
+
+
     def animate(i):
         sim.evolve()
-        print(sim.time)
         if psi == "norm":
             im.set_array(np.transpose(sim.normPsi().reshape(allPoints,
                          allPoints)))
@@ -107,7 +109,7 @@ def animation2D(sim, potentialFunc, psi="norm", time=100, save=False):
 
         return im,
 
-    ani = animation.FuncAnimation(fig, animate, frames=time, interval=20,
+    ani = animation.FuncAnimation(fig, animate, frames=time, interval=60,
                                   blit=True)
 
     if save:
@@ -127,24 +129,26 @@ def frame2D(sim, potentialFunc, psi="norm"):
         psi: (string) "real" or "norm" to determine whether to plot
             Re(Ψ) or |Ψ|^2
         time: (int) Number of frames to animate.
-        save: (Boolean) Whether the animation should be saved.
     Outputs:
-        Displays animation with both the evolving wavefunction norm and the
+        Displays a frame with both the evolving wavefunction norm and the
             potential function influencing it.
     """
     domain = sim.domain()
     allPoints = sim.allPoints
-
-    fig = plt.figure()
-    im = plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
-                    animated=True, cmap=plt.get_cmap('jet'), alpha=.9,
-                    origin='lower')
 
     if potentialFunc != 'none':
         # Only plot the potential if running locally, not in notebook.
         potentialPlot = np.vectorize(potentialFunc)(domain[0], domain[1])
         plt.imshow(potentialPlot, cmap=plt.get_cmap('Greys'), alpha=1,
                    origin='lower')
+
+    plt.imshow(np.transpose(sim.normPsi().reshape(allPoints, allPoints)),
+               cmap=plt.get_cmap('jet'), alpha=.9, origin='lower')
+
+    plt.xticks([])
+    plt.yticks([])
+    plt.xlabel(r'$x$', fontsize=18)
+    plt.ylabel(r'$y$', fontsize=18)
 
 def probabilityGraph(P):
     '''

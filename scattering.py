@@ -1,5 +1,5 @@
 """
-Simulation of Rutherford dispersion.
+Simulation of Rutherford scattering.
 
 Created on: 28-04-2017.
 @author: eduardo
@@ -25,22 +25,26 @@ if dirichletBC:
 allPoints = numberPoints + sign
 
 
-def dispersion(x, y):
+def scattering(x, y):
     '''1/r^2 Dispersive force around a defined center '''
-    center = [0.8, 1.]
+    center = [0.5, 1.]
+    alpha = 10
     r = np.linalg.norm([x - center[0], y - center[1]])
-    return 1./r**2
+    return alpha/r
 
 
-def dispersionVis(x, y):
+def scatteringVis(x, y):
     '''An exaggereted potential function to make it more visisble'''
-    center = [0.8, 1.]
+    center = [0.5, 1.]
     r = np.linalg.norm([x - center[0], y - center[1]])
-    return 10./((r)**2)
+    if r < .05:
+        return 1
+    else:
+        return 0
 
 
 # Create the simulation for the system
-sim = sm.Simulation(dim=dim, potentialFunc=dispersion,
+sim = sm.Simulation(dim=dim, potentialFunc=scattering,
                     dirichletBC=dirichletBC, numberPoints=numberPoints,
                     startPoint=startPoint, domainLength=domainLength,
                     dt=dt)
@@ -50,5 +54,5 @@ sim.setPsiPulse(pulse="circular", energy=1000, vel=[1, 0], center=[.1, 1], width
 
 # System evolution and Animation
 ani = qplots.animation2D(sim, psi="norm",
-                         potentialFunc=dispersionVis, save=False)
+                         potentialFunc=scatteringVis, save=False)
 plt.show()
