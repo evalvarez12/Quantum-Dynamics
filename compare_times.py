@@ -39,7 +39,7 @@ sim = sm.Simulation(dim=dim, potentialFunc=potentialWell,
                     dt=dt)
 
 # Create the initial wave function
-sim.setPsiPulse(energy=500, center=2)
+sim.setPsiPulse(pulse="plane", energy=500, center=2)
 
 
 # %% Evolution methods
@@ -91,35 +91,40 @@ def solver_test():
     linalg_spsolve = time.clock() - start
     print('linalg_spsolve = ' + str(linalg_spsolve) + 's')
 
-    sim.setPsiPulse(energy=500, center=2)
+    sim.psi = np.zeros(sim.allPoints**sim.dim, dtype=np.complex128)
+    sim.setPsiPulse(pulse="plane", energy=500, center=2)
     start = time.clock()
     for i in range(x):
         evolve_cgs(sim)
     cgs = time.clock() - start
     print('cgs = ' + str(cgs) + 's')
 
-    sim.setPsiPulse(energy=500, center=2)
+    sim.psi = np.zeros(sim.allPoints**sim.dim, dtype=np.complex128)
+    sim.setPsiPulse(pulse="plane", energy=500, center=2)
     start = time.clock()
     for i in range(x):
         evolve_bicgstab(sim)
     bicgstab = time.clock() - start
     print('bicgstab = ' + str(bicgstab) + 's')
 
-    sim.setPsiPulse(energy=500, center=2)
+    sim.psi = np.zeros(sim.allPoints**sim.dim, dtype=np.complex128)
+    sim.setPsiPulse(pulse="plane", energy=500, center=2)
     start = time.clock()
     for i in range(x):
         evolve_gmres(sim)
     gmres = time.clock() - start
     print('gmres = ' + str(gmres) + 's')
 
-    sim.setPsiPulse(energy=500, center=2)
+    sim.psi = np.zeros(sim.allPoints**sim.dim, dtype=np.complex128)
+    sim.setPsiPulse(pulse="plane", energy=500, center=2)
     start = time.clock()
     for i in range(x):
         evolve_lgmres(sim)
     lgmres = time.clock() - start
     print('lgmres = ' + str(lgmres) + 's')
 
-    sim.setPsiPulse(energy=500, center=2)
+    sim.psi = np.zeros(sim.allPoints**sim.dim, dtype=np.complex128)
+    sim.setPsiPulse(pulse="plane", energy=500, center=2)
     start = time.clock()
     for i in range(x):
         evolve_qmr(sim)
